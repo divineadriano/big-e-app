@@ -32,7 +32,7 @@ router.post('/add-user', function(req, res, next) {
         service: 'gmail',
         auth: {
           user: 'divinegraceguballa@gmail.com',
-      pass: 'dDgPNS@041621'
+      pass: 'itkantjlwvivbotg'
         }
       });
 
