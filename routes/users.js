@@ -8,6 +8,7 @@ var nodemailer = require('nodemailer');
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'add user' });
 });
+
  
 router.post('/add-user', function(req, res, next) {
      
@@ -40,7 +41,7 @@ router.post('/add-user', function(req, res, next) {
         from: 'divinegadriano@gmail.com',
         to: 'adrianodivine@gmail.com',
         subject: 'Sending Email via Node.js',
-        text: 'That was easy!'
+        text: req.body.name
       };
         
       mail.sendMail(mailOptions, function(error, info){
@@ -55,11 +56,19 @@ router.post('/add-user', function(req, res, next) {
 
 
 
+/* GET home page. */
+router.get('/list', function(req, res, next) {
+    
+  
+  userModel.find((err, docs) => {
+      if (!err) {
+          res.render('list', {data: docs});
+      } else {
+          console.log('Failed to retrieve the Course List: ' + err);
+      }
+  });
 
+});
 
-router.post('/get-quote', function(req, res, next){
-
-
-})
  
 module.exports = router;
