@@ -25,6 +25,7 @@
               <table class="table">
             <thead>
               <tr>
+                <td><input type="checkbox"></td>
                 <th scope="col">#</th>
                 <th scope="col">Name</th>
                 <th scope="col">Incoterms</th>
@@ -38,6 +39,7 @@
              
               for(var i = 0; i< data.length; i++) {%>  
               <tr>
+                <td><input type="checkbox"></td>
                 <th scope="row"><%= (i+1) %></th>
                 <td><%= data[i].name%></td>
                 <td><%= data[i].incoterms%></td>
@@ -48,7 +50,7 @@
                        
                }else{ %>
                    <tr>
-                      <td colspan="5">No user</td>
+                      <td colspan="6">No user</td>
                    </tr>
                 <% } %>    
               
