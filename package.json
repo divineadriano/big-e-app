@@ -1,37 +1,22 @@
 {
-  "name": "era-imports",
-  "version": "1.0.0",
-  "description": "ERA Imports Quote App",
-  "main": "index.js",
+  "name": "big-e-app-main",
+  "version": "0.0.0",
+  "private": true,
   "scripts": {
     "start": "nodemon server.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/divineadriano/big-e-app.git"
-  },
-  "author": "Knobin Digital",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/divineadriano/big-e-app/issues"
-  },
-  "homepage": "https://github.com/divineadriano/big-e-app#readme",
   "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "body-parser": "^1.20.0",
-    "express": "^4.18.1",
+    "cookie-parser": "~1.4.4",
+    "cors": "^2.8.5",
+    "debug": "~2.6.9",
+    "ejs": "~2.6.1",
+    "express": "~4.16.1",
     "express-flash": "^0.0.2",
     "express-session": "^1.17.3",
-    "jsonwebtoken": "^8.5.1",
+    "express-validator": "^6.14.2",
+    "http-errors": "~1.6.3",
     "mongoose": "^6.4.4",
-    "morgan": "^1.10.0",
-    "nodemon": "^2.0.19",
-    "passport": "^0.6.0",
-    "passport-local": "^1.0.0",
-    "passport-local-mongoose": "^7.1.2"
-  },
-  "keywords": [
-    "quotation",
-    "page"
-  ]
+    "morgan": "~1.9.1",
+    "nodemon": "^2.0.19"
+  }
 }
