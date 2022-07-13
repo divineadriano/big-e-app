@@ -41,6 +41,7 @@ app.use(session({
 app.use(flash());
 app.use('/', usersRouter);
 app.use('/list', usersRouter);
+app.use('/quote-portal', usersRouter);
  
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

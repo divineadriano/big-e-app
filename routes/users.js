@@ -2,11 +2,16 @@ var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
 var userModel = require('../models/userMod');
+var quoteModel = require('../models/quote');
 var nodemailer = require('nodemailer');
  
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'add user' });
+});
+
+router.get('/quote-portal', function(req, res, next) {
+  res.render('quote-portal', { title: 'Quote Portal' });
 });
 
  
@@ -56,7 +61,7 @@ router.post('/add-user', function(req, res, next) {
 
 
 
-/* GET home page. */
+/* GET users */
 router.get('/list', function(req, res, next) {
     
   
@@ -68,6 +73,57 @@ router.get('/list', function(req, res, next) {
       }
   });
 
+});
+
+/* GET users */
+router.post('/accept-quote', function(req, res, next) {
+    
+  
+  var quoteDetails = new quoteModel({
+    name: req.body.name,
+    pickupcountry: req.body.pickupcountry,
+    pickupsuburb: req.body.pickupsuburb,
+    destination: req.body.destination,
+    packaging: req.body.packaging,
+    noOfBoxes: req.body.noOfBoxes,
+    length: req.body.length,
+    width: req.body.width,
+    height: req.body.height,
+    weight: req.body.weight,
+    quoteprice: req.body.quoteprice
+  });
+   
+  quoteDetails .save((err, doc) => {
+        if (!err){
+            req.flash('success', 'Quote Accepted!');
+            console.log('Quote Accepted!');
+            res.redirect('/list');}
+        else{
+            console.log('Error during record insertion : ' + err);}
+  });
+
+  var mail = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'divinegraceguballa@gmail.com',
+  pass: 'itkantjlwvivbotg'
+    }
+  });
+
+  var mailOptions = {
+    from: 'divinegadriano@gmail.com',
+    to: 'adrianodivine@gmail.com',
+    subject: 'Sending Email via Node.js',
+    text: 'Quote Accepted' + req.body.name + req.body.pickupcountry
+  };
+    
+  mail.sendMail(mailOptions, function(error, info){
+    if (error) {
+      console.log(error);
+    } else {
+      console.log('Email sent: ' + info.response);
+    }
+  });
 });
 
  
