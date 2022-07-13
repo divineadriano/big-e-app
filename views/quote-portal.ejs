@@ -28,55 +28,97 @@
               <form action="accept-quote" method="POST">
                 <div class="form-group">
                   <label for="name">Name</label>
-                  <input type="text" class="form-control col-lg-9" id="name" aria-describedby="emailHelp" placeholder="Enter Name:" name="name">
+                  <input required type="text" class="form-control col-lg-9"  id="name" aria-describedby="emailHelp" placeholder="Enter Name:" name="name">
                 </div>
-                
+                <br>
                 <label for="pickupcountry">Pickup Country:</label>
-                <select name="pickupcountry" id="pickupcountry">
+                <select required class="form-control col-lg-4" name="pickupcountry" id="pickupcountry">
                     <option value="China">China</option>
                     <option value="United States">USA</option>
                 </select>
-    
+                
                 <label for="pickupsuburb">Pickup Country:</label>
-                <select name="pickupsuburb" id="pickupsuburb">
+                <select required class="form-control col-lg-4" name="pickupsuburb" id="pickupsuburb">
                     <option value="Ningbo">Ningbo</option>
                     <option value="Yiwu">Yiwu</option>
                 </select>
-    
-                <label for="destination">Pickup Country:</label>
-                <select name="destination" id="destination">
+                <br>
+                <label for="destination">Destination Country:</label>
+                <select required class="form-control col-lg-9" name="destination" id="destination">
                     <option value="Australia">Australia</option>
                     <option value="United States">USA</option>
                 </select>
-    
+                <br>
+
+                <label for="incoterms">Shipping Method:</label>
+                <select required class="form-control col-lg-3" name="incoterms" id="incoterms" >
+                    <option value="EXW">Ex-Works</option>
+                    <option value="FOB">Free On-Board</option>
+                </select>
+
+                <label for="shippingspeed">Shipping Method:</label>
+                <select required class="form-control col-lg-3" name="shippingspeed" id="shippingspeed" >
+                    <option value="Express">Express</option>
+                    <option value="Transhipment">Transhipment</option>
+                </select>
+
                 <label for="shippingmethod">Shipping Method:</label>
-                <select name="shippingmethod" id="shippingmethod">
+                <select required class="form-control col-lg-3" name="shippingmethod" id="shippingmethod" onchange="computeQuote()" onfocus="this.selectedIndex = -1;">
                     <option value="Air Freight">Air Freight</option>
                     <option value="LCL-20ft">LCL-20ft</option>
                 </select>
     
                 <label for="packaging">Packaging:</label>
-                <select name="packaging" id="packaging">
+                <select required class="form-control col-lg-3" name="packaging" id="packaging">
                     <option value="boxes">Boxes</option>
                     <option value="pallet">Pallet</option>
                 </select>
-    
+                
                 <label for="noOfBoxes">No. of  Boxes:</label>
-                <input type="number" id="noOfBoxes" name="noOfBoxes" min="1" max="10">
-    
+                <input type="number" class="form-control col-lg-3" required id="noOfBoxes" name="noOfBoxes" min="1" max="10">
+                <br>
                 <label for="length">Length (cm):</label>
-                <input type="number" id="length" name="length" min="1" max="100">
+                <input type="number" class="form-control col-lg-2" required id="length" name="length" min="1" max="100" onkeyup="computeQuote()">
     
                 <label for="width">Width  (cm):</label>
-                <input type="number" id="width" name="width" min="1" max="100">
+                <input type="number" class="form-control col-lg-2" required id="width" name="width" min="1" max="100" onkeyup="computeQuote()">
     
                 <label for="height">Height  (cm):</label>
-                <input type="number" id="height" name="height" min="1" max="100">
+                <input type="number" class="form-control col-lg-2" required id="height" name="height" min="1" max="100" onkeyup="computeQuote()">
     
                 <label for="weight">Weight (kg):</label>
-                <input type="number" id="weight" name="weight" min="1" max="100">
+                <input type="number" class="form-control col-lg-2" required id="weight" name="weight" min="1" max="100" onkeyup="computeQuote()">
+                <br>
+                <input type="text" class="form-control col-lg-9" id="quoteprice" name="quoteprice" ><br><br>
     
-    
+                <script>
+                  function computeQuote() {
+                    var quoteprice = document.getElementById("quoteprice");
+                    var l = document.getElementById("length").value;
+                    var w = document.getElementById("width").value;
+                    var h = document.getElementById("height").value;
+                    var cbm;
+                    var kg = document.getElementById("kg");
+                    var shippingmethod = document.getElementById("shippingmethod").value;
+
+                    if(l!="" && w!="" && h!=""){
+                      
+                      if(shippingmethod === "Air"){
+                      cbm = (l*w*h)/4500;
+                      quoteprice.value=cbm *100;
+                      }
+                      else{
+                        cbm = (l*w*h)/3500;
+                        quoteprice.value=cbm * 50;
+                      }
+                    }
+                    else{
+                      quoteprice.value=0;
+                    }
+                    
+                  }
+
+                </script>
                 
                 <button type="submit" class="btn btn-primary">Accept Quote</button>
               </form>

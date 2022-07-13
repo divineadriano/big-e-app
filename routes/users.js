@@ -62,6 +62,20 @@ router.post('/add-user', function(req, res, next) {
 
 
 /* GET users */
+router.get('/accepted-quotes', function(req, res, next) {
+    
+  
+  quoteModel.find((err, docs) => {
+      if (!err) {
+          res.render('accepted-quotes', {data: docs});
+      } else {
+          console.log('Failed to retrieve the Course List: ' + err);
+      }
+  });
+
+});
+
+
 router.get('/list', function(req, res, next) {
     
   
@@ -84,6 +98,8 @@ router.post('/accept-quote', function(req, res, next) {
     pickupcountry: req.body.pickupcountry,
     pickupsuburb: req.body.pickupsuburb,
     destination: req.body.destination,
+    incoterms: req.body.incoterms,
+    shippingspeed: req.body.shippingspeed,
     packaging: req.body.packaging,
     noOfBoxes: req.body.noOfBoxes,
     length: req.body.length,
@@ -113,8 +129,20 @@ router.post('/accept-quote', function(req, res, next) {
   var mailOptions = {
     from: 'divinegadriano@gmail.com',
     to: 'adrianodivine@gmail.com',
-    subject: 'Sending Email via Node.js',
-    text: 'Quote Accepted' + req.body.name + req.body.pickupcountry
+    subject: 'New Shipping Quote Accepted!',
+    text: 'Quote Accepted\n' + req.body.name + '\r\n\r\n' +
+          req.body.pickupcountry + '\r\n\r\n' +
+          req.body.pickupsuburb + '\r\n\r\n' +
+          req.body.destination + '\r\n\r\n' +
+          req.body.incoterms + '\r\n\r\n' +
+          req.body.shippingspeed + '\r\n\r\n' +
+          req.body.packaging + '\r\n\r\n' +
+          req.body.noOfBoxes + '\r\n\r\n' +
+          req.body.length + '\r\n\r\n' +
+          req.body.width + '\r\n\r\n' +
+          req.body.height + '\r\n\r\n' +
+          req.body.weight + '\r\n\r\n' +
+          req.body.quoteprice + '\r\n\r\n' 
   };
     
   mail.sendMail(mailOptions, function(error, info){

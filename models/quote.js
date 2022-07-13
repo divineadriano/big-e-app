@@ -25,6 +25,12 @@ const quoteSchema = new Schema({
     destination:{
         type:String
     },
+    incoterms:{
+        type:String
+    },
+    shippingspeed:{
+        type:String
+    },
     shippingmethod:{
         type:String
     },
