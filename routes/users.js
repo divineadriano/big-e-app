@@ -1,8 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
-const Customer = require('../models/Customer')
- 
+var userModel = require('../models/userMod');
+var nodemailer = require('nodemailer');
  
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -11,44 +11,55 @@ router.get('/', function(req, res, next) {
  
 router.post('/add-user', function(req, res, next) {
      
-  //req.check('name', 'Name is required').notEmpty()           //Validate name
-  // req.check('email', 'A valid email is required').isEmail()  //Validate email
-  
- // var validationErrors = req.validationErrors();
-     
-   // if( !validationErrors ) {   //No errors were found.  Passed Validation!
-         
-     
-      var customerDetails = new Customer({
+   
+      var userDetails = new userModel({
         name: req.body.name,
         email: req.body.email,
         phone: req.body.phone,
         address: req.body.address,
-
       });
        
-      customerDetails .save((err, doc) => {
+      userDetails .save((err, doc) => {
             if (!err){
                 req.flash('success', 'User added successfully!');
+                console.log('User added successfully!');
                 res.redirect('/');}
             else{
                 console.log('Error during record insertion : ' + err);}
       });
    
-  //  }
-  //  else {   //Display errors to user
-   //     var error_msg = ''
-    //    errors.forEach(function(error) {
-    //        error_msg += error.msg + '<br>'
-     //   })                
-     //   req.flash('error', error_msg)        
-         
-      //  res.render('/', { 
-       //     title: 'Add New User',
-        //    name: req.body.name,
-        //    email: req.body.email
-      //  })
-  //  }
-});
+      var mail = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: 'divinegraceguballa@gmail.com',
+      pass: 'dDgPNS@041621'
+        }
+      });
+
+      var mailOptions = {
+        from: 'divinegadriano@gmail.com',
+        to: 'adrianodivine@gmail.com',
+        subject: 'Sending Email via Node.js',
+        text: 'That was easy!'
+      };
+        
+      mail.sendMail(mailOptions, function(error, info){
+        if (error) {
+          console.log(error);
+        } else {
+          console.log('Email sent: ' + info.response);
+        }
+      });
     
+});
+
+
+
+
+
+router.post('/get-quote', function(req, res, next){
+
+
+})
+ 
 module.exports = router;

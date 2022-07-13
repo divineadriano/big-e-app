@@ -7,7 +7,16 @@ var bodyParser = require('body-parser');
 var flash = require('express-flash');
 var session = require('express-session');
 var usersRouter = require('./routes/users');
- 
+var nodemailer = require('nodemailer');
+
+
+var mail = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'divinegraceguballa@gmail.com',
+        pass: 'dDgPNS@041621'
+    }
+  });
  
 var app = express();
  
@@ -49,7 +58,7 @@ app.use(function(err, req, res, next) {
 });
  
 
-const PORT = process.env.PORT || 5000
+const PORT = process.env.PORT || 3000
 
 app.listen(PORT, () => {
 console.log('Server is running on port ${PORT}')
