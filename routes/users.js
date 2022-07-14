@@ -61,13 +61,32 @@ router.post('/add-user', function(req, res, next) {
 
 
 
-/* GET users */
+/* Display Accepted Quotes */
 router.get('/accepted-quotes', function(req, res, next) {
     
-  
-  quoteModel.find((err, docs) => {
+  const query = { "tag": "Accepted" };
+  quoteModel.find( query, (err, docs) => {
       if (!err) {
-          res.render('accepted-quotes', {data: docs});
+        res.render('accepted-quotes', {data: docs});
+        
+               
+      } else {
+          console.log('Failed to retrieve the Course List: ' + err);
+      }
+  });
+
+  
+  
+
+});
+
+/* Display Drafted Quotes */
+router.get('/drafted-quotes', function(req, res, next) {
+    
+  const query = { "tag": "Drafted" };
+  quoteModel.find( query, (err, docs) => {
+      if (!err) {
+        res.render('drafted-quotes', {data: docs});           
       } else {
           console.log('Failed to retrieve the Course List: ' + err);
       }
@@ -75,13 +94,15 @@ router.get('/accepted-quotes', function(req, res, next) {
 
 });
 
-
 router.get('/list', function(req, res, next) {
     
   
   userModel.find((err, docs) => {
       if (!err) {
+        
           res.render('list', {data: docs});
+        
+          
       } else {
           console.log('Failed to retrieve the Course List: ' + err);
       }
@@ -106,14 +127,15 @@ router.post('/accept-quote', function(req, res, next) {
     width: req.body.width,
     height: req.body.height,
     weight: req.body.weight,
-    quoteprice: req.body.quoteprice
+    quoteprice: req.body.quoteprice,
+    tag: req.body.tag
   });
    
   quoteDetails .save((err, doc) => {
         if (!err){
             req.flash('success', 'Quote Accepted!');
             console.log('Quote Accepted!');
-            res.redirect('/list');}
+            res.redirect('/accepted-quotes');}
         else{
             console.log('Error during record insertion : ' + err);}
   });

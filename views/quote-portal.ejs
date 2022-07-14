@@ -16,10 +16,12 @@
                 <a href="https://big-e-app.herokuapp.com/quote-portal" class="active">Request Quote</a>
                 <a href="https://big-e-app.herokuapp.com/accepted-quotes">Accepted Quotes</a>
                 <a href="https://big-e-app.herokuapp.com/draft-quotes">Draft Quotes</a>
+                <a href="https://big-e-app.herokuapp.com/draft-quotes">Requested Quotes</a>
               </div>
         </div>
         <div class="column-2" style="background-color:#bbb;">
-          <h2>ERA Imports Quote Portal</h2>
+          <a href="https://big-e-app.herokuapp.com/request-quote">Request Personal Quotation</a>
+          <h2>Automatic Quote Calculator</h2>
           <div class="card">
             <div class="card-body">
               
@@ -89,6 +91,11 @@
                 <label for="weight">Weight (kg):</label>
                 <input type="number" class="form-control col-lg-2" required id="weight" name="weight" min="1" max="100" onkeyup="computeQuote()">
                 <br>
+                
+                <input type="checkbox" id="tag" name="tag" value="Accepted">
+                <label for="accepttag">By ticking the box below, you have confimed that you are accepting the value of the above quotaion. Leave uncheck to save the quote as drafts.</label> 
+               
+
                 <input type="text" class="form-control col-lg-9" id="quoteprice" name="quoteprice" ><br><br>
     
                 <script>
@@ -117,6 +124,8 @@
                     }
                     
                   }
+
+                  
 
                 </script>
                 

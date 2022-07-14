@@ -54,6 +54,13 @@ const quoteSchema = new Schema({
     },
     quoteprice:{
         type:Number
+    },
+    tag:{
+        type:String,
+        default:"Drafted"
+    },
+    status:{
+        type:String
     }
 
 }, {timestamps:true})
