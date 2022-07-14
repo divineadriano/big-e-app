@@ -8,6 +8,7 @@ var flash = require('express-flash');
 var session = require('express-session');
 var usersRouter = require('./routes/users');
 var nodemailer = require('nodemailer');
+var axios = require('axios');
 
 
 var mail = nodemailer.createTransport({

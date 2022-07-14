@@ -10,23 +10,22 @@
 <body>
 
     <div class="row">
-        <div class="column-1" style="background-color:#aaa;">
+        <div class="column-1">
             <div class="vertical-menu">
                 <a href="https://big-e-app.herokuapp.com/quote-portal" >Request Quote</a>
                 <a href="https://big-e-app.herokuapp.com/accepted-quotes" class="active">Accepted Quotes</a>
                 <a href="https://big-e-app.herokuapp.com/draft-quotes">Draft Quotes</a>
               </div>
         </div>
-        <div class="column-2" style="background-color:#bbb;">
+        <div class="column-2" >
           <h2>Accepted Quotes</h2>
             <% if (messages.success) { %>
                 <p class="alert alert-success mt-4"><%- messages.success %></p>
             <% } %>  
             <br>
               <table class="table">
-            <thead>
+            <thead class="thead-dark">
               <tr>
-                <td><input type="checkbox"></td>
                 <th scope="col">#</th>
                 <th scope="col">Date Created</th>
                 <th scope="col">Name</th>
@@ -41,7 +40,6 @@
              
               for(var i = 0; i< data.length; i++) {%>  
               <tr>
-                <td><input type="checkbox"></td>
                 <th scope="row"><%= (i+1) %></th>
                 <td><%= data[i].createdAt%></td>
                 <td><%= data[i].name%></td>
@@ -54,7 +52,7 @@
                        
                }else{ %>
                    <tr>
-                      <td colspan="8">No user</td>
+                      <td colspan="7">No user</td>
                    </tr>
                 <% } %>    
               

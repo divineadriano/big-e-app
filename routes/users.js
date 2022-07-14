@@ -4,6 +4,9 @@ var mongoose = require('mongoose');
 var userModel = require('../models/userMod');
 var quoteModel = require('../models/quote');
 var nodemailer = require('nodemailer');
+const axios = require('axios');
+const controller = require('../controllers/controller');
+const services = require('../services/render');
  
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -109,6 +112,10 @@ router.get('/list', function(req, res, next) {
   });
 
 });
+
+
+router.get('/api/quotes', controller.find);
+router.get('/update-quote', services.update_quote);
 
 /* GET users */
 router.post('/accept-quote', function(req, res, next) {
