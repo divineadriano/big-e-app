@@ -9,18 +9,22 @@
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 </head>
 <body>
+    <!-- include header -->
+    <%- include('include/header') %>
+    <!-- /include header -->
 
-    <div class="row">
+    <div class="main-content">
+      <div class="row">
         <div class="column-1" >
             <div class="vertical-menu">
               <a href="/quote-portal" >Quote Calculator</a>
               <a href="/accepted-quotes">Accepted Quotes</a>
               <a href="/drafted-quotes" class="active">Draft Quotes</a>
-              <a href="/drafted-quotes">Requested Quotes</a>
+              <a href="/my-quote-requests">Requested Quotes</a>
             </div>
         </div>
         <div class="column-2" >
-          <h2>Draft Quotes</h2>
+          <h2>My Saved Quotes</h2>
             <% if (messages.success) { %>
                 <p class="alert alert-success mt-4"><%- messages.success %></p>
             <% } %>  
@@ -69,5 +73,8 @@
             </table>
         </div>
       </div>
+    </div>
+
+    
 </body>
 </html>

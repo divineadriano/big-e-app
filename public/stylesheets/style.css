@@ -1,7 +1,49 @@
 body {
-  padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
+
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+
+.main-content{
+    padding:50px;
+}
+
+.topnav {
+overflow: hidden;
+background-color: #2e3690;
+}
+
+.topnav a {
+float: left;
+color: #f2f2f2;
+text-align: center;
+padding: 14px 16px;
+text-decoration: none;
+font-size: 17px;
+}
+
+.topnav a:hover {
+background-color: #ddd;
+color: black;
+}
+
+.topnav a.active {
+background-color: #04AA6D;
+color: white;
+}
+
+.topnav a.out {
+background-color: #ED1D24;
+float:right;
+color: white;
+}
+
+
 
 a {
   text-decoration:none;
@@ -161,13 +203,16 @@ table{
 }
 
 .table td > a.btn{
-    padding: .3em 1em;
+    padding: .2em 0.5em;
     font-size: 1.1em;
     margin: 0 .2em;
+    background-color:#ffffff ;
+    color:#2C3690 ;
 }
 
 .table tr:hover{
-    background-color:#2c3690 ;
+    background-color:#ced2f7 ;
+    color: black;
 }
 
 .table tr:hover td > a{
@@ -178,6 +223,14 @@ table{
     color: #fff;
     background-color: var(--dark) ;
     border-color: #32383e;
+}
+
+.table td > a.btn:hover{
+    padding: .2em 0.5em;
+    font-size: 1.1em;
+    margin: 0 .2em;
+    background-color:#2C3690 ;
+    color:#ffffff ;
 }
 
 @media only screen and (max-width: 1024px){
@@ -311,4 +364,24 @@ table{
 .form-group2 .form-cell{
   display:table-cell !important;
   
+}
+
+.btn-primary{
+    background-color: #2c3690 !important;
+    font-weight: bold !important;
+    border: #2c3690 !important;
+}
+
+.btn-save{
+    background-color: #D92E2F;border:#D92E2F;
+    color:white;
+    font-weight: bold !important;
+}
+
+.btn-primary:hover{
+    background-color: #1b1c20 !important;
+}
+
+.btn-save:hover{
+    background-color: #a01919 !important;
 }
