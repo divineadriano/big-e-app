@@ -7,84 +7,182 @@ var alert = require('alert')
 var nodemailer = require('nodemailer');
 const axios = require('axios');
 const controller = require('../controllers/controller');
+const bcrypt = require('bcryptjs');
+
 const services = require('../services/render');
+const freightChargeModel = require('../models/freight-charge');
+var session = require('express-session')
  
+
+router.use(
+  session({
+    secret: 'SomeSuperLongHardToGuessSecretString',
+    resave: true,
+    saveUninitialized: false,
+  })
+);
+
+
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('quote-portal', { title: 'add user' });
+  res.render('register', { title: 'ERA Imports Quote Portal Sign Up' });
+});
+
+
+router.get('/request-a-quote', function(req, res, next) {
+  if(req.session.user){
+    console.log(req.session.user);
+    const docs = req.session.user;
+    console.log(docs);
+    res.render('request-a-quote', {data: docs});
+  }
+  else{
+    res.redirect('/login');
+  }
+});
+
+router.get('/add-freight-charge', function(req, res, next) {
+  if(req.session.user){
+    res.render('add-freight-charge', { title: 'Add Freight Charge' });
+  }
+  else{
+    res.redirect('/login');
+  }
+  
 });
 
 router.get('/quote-portal', function(req, res, next) {
-  res.render('quote-portal', { title: 'Quote Portal' });
+  if(req.session.user){
+    console.log(req.session.user);
+    const docs = req.session.user;
+    console.log(docs);
+    res.render('quote-portal', {data: docs});
+  }
+  else{
+    res.redirect('/login');
+  }
+  
 });
 
-router.get('/request-a-quote', function(req, res, next) {
-  res.render('request-a-quote', { title: 'Request Persona Quotation' });
+
+
+
+/* Login Authentication */
+router.post('/authenticate', function(req, res, next) {
+
+  if(req.session.user){
+    if(req.session.user[0].userRole === "Admin"){
+      res.redirect('/admin-dashboard');
+    }
+    else{
+      res.redirect('/quote-portal');
+    }
+
+  }
+  else{
+    const query = { "email": req.body.email };
+  userModel.find( query, (err, docs) => {
+      if (!err) {
+        console.log(docs[0].password)
+        var hashedPassword = docs[0].password;
+            bcrypt.compare(req.body.password, hashedPassword, function (cryptErr, cryptResult) {
+                if (cryptResult) {
+                  req.session.user = docs;
+                  req.session.save();
+                  if(docs[0].userRole === "Admin"){
+                    res.redirect('/admin-dashboard');
+                  }
+                  else{
+                    res.render('quote-portal', {data: docs});
+                  }
+                  
+                } else {
+                    res.send('Incorrect Password!');
+                    console.log(cryptErr);
+                }
+                res.end();
+            });
+      }
+      else {
+          console.log('No user match that email address' + err);
+      }
+  });
+  }
+  
 });
 
+router.get('/login', function(req, res, next) {
+  if(req.session.user){
+    if(req.session.user[0].userRole === "Admin"){
+      res.redirect('/admin-dashboard');
+    }
+    else{
+      res.redirect('/quote-portal');
+    }
+  }
+  else{
+    res.render('login', { title: 'Log In' });
+  }
+
+  
+});
+
+router.post('/logout', function(req, res, next) {
+  console.log(req.session.user);
+  req.session.destroy();
+  res.redirect('/login');
+});
+
+router.get('/admin-dashboard', function(req, res, next) {
+  if(req.session.user){
+    res.render('admin-dashboard', { title: 'Admin Dashboard' });
+  }
+  else{
+    res.redirect('/login');
+  }
+  
+});
  
 router.post('/add-user', function(req, res, next) {
-     
-   
-      var userDetails = new userModel({
-        name: req.body.name,
-        email: req.body.email,
-        phone: req.body.phone,
-        address: req.body.address,
-      });
-       
-      userDetails .save((err, doc) => {
-            if (!err){
-                req.flash('success', 'User added successfully!');
-                console.log('User added successfully!');
-                res.redirect('/');}
-            else{
-                console.log('Error during record insertion : ' + err);}
-      });
-   
-      var mail = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: 'divinegraceguballa@gmail.com',
-      pass: 'itkantjlwvivbotg'
-        }
-      });
+    var userDetails = new userModel({
+      name: req.body.name,
+      companyName: req.body.companyName,
+      email: req.body.email,
+      password: req.body.password,
+      phone: req.body.phone,
+      deliveryAddress: req.body.deliveryAddress,
+      userRole: "Customer"
+    });
 
-      var mailOptions = {
-        from: 'divinegadriano@gmail.com',
-        to: 'adrianodivine@gmail.com',
-        subject: 'Sending Email via Node.js',
-        text: req.body.name
-      };
-        
-      mail.sendMail(mailOptions, function(error, info){
-        if (error) {
-          console.log(error);
-        } else {
-          console.log('Email sent: ' + info.response);
-        }
-      });
-    
+    userDetails.save((err, doc) => {
+          if (!err){
+              req.flash('success', 'User added successfully!');
+              console.log('User added successfully!');
+              res.redirect('/login');}
+          else{
+              console.log('Error during record insertion : ' + err);}
+    });
 });
-
 
 
 /* Display Accepted Quotes */
 router.get('/accepted-quotes', function(req, res, next) {
     
   const query = { "tag": "Accepted" };
+
   quoteModel.find( query, (err, docs) => {
       if (!err) {
-        res.render('accepted-quotes', {data: docs});
-        
-               
+        if(req.session.user){
+          res.render('accepted-quotes', {data: docs});
+        }
+        else{
+          res.redirect('/login');
+        }  
       } else {
           console.log('Failed to retrieve the Course List: ' + err);
       }
   });
-
-  
-  
 
 });
 
@@ -94,7 +192,14 @@ router.get('/drafted-quotes', function(req, res, next) {
   const query = { "tag": "Drafted" };
   quoteModel.find( query, (err, docs) => {
       if (!err) {
-        res.render('drafted-quotes', {data: docs});           
+
+        if(req.session.user){
+          res.render('drafted-quotes', {data: docs});
+        }
+        else{
+          res.redirect('/login');
+        }  
+                   
       } else {
           console.log('Failed to retrieve the Course List: ' + err);
       }
@@ -125,7 +230,13 @@ router.get('/my-quote-requests', function(req, res, next) {
   const query = { "tag": "Requested" };
   quoteModel.find( query, (err, docs) => {
       if (!err) {
-        res.render('my-quote-requests', {data: docs});           
+        if(req.session.user){
+          res.render('my-quote-requests', {data: docs});
+        }
+        else{
+          res.redirect('/login');
+        }  
+                   
       } else {
           console.log('Failed to retrieve the Course List: ' + err);
       }
@@ -138,6 +249,8 @@ router.get('/my-quote-requests', function(req, res, next) {
 
 router.get('/api/quotes', controller.find);
 router.get('/update-quote', services.update_quote);
+router.put('/api/quote/:id', controller.update);
+router.delete('/api/quote/:id', controller.delete);
 
 /* ACCEPT Quote*/
 router.post('/accept-quote', function(req, res, next) {
@@ -178,11 +291,11 @@ router.post('/accept-quote', function(req, res, next) {
   });
 
   var mailOptions = {
-    from: 'divinegadriano@gmail.com',
+    from: 'bigeimports@gmail.com',
     to: 'divine.adriano@knobin.com',
     subject: 'New Shipping Quote Accepted!',
     html: "<style>table{text-align:left;border-collapse: collapse;}th{border: 1px solid #2e3690;background:#2e3690;color:white;padding:10px;}td{padding:10px;border: 1px solid #2e3690;}</style>" +
-          "<h1>New Quote Accepted</h1>" + "<p>Hello Big E Imports, A new quoation has been accepted in your system! Please check details below.</p><br><br>" +
+          "<h1>New Quote Accepted</h1>" + "<p>Hello Big E Imports, A new quotation has been accepted in your system! Please check details below.</p><br><br>" +
           "<table><tr><th><b>Customer Name: </b></th>" + "<td>" +req.body.name + "</td></tr>" +
           "<tr><th><b>Pickup Country: </b></th>" + "<td>"  + req.body.pickupcountry + "</td></tr>" +
           "<tr><th><b>Pickup Suburb: </b></th>" + "<td>"  + req.body.pickupsuburb + "</td></tr>" +
@@ -282,21 +395,23 @@ router.post('/request-quote', function(req, res, next) {
   });
 
   var mailOptions = {
-    from: 'divinegadriano@gmail.com',
-    to: 'adrianodivine@gmail.com',
+    from: 'bigeimports@gmail.com',
+    to: 'divine.adriano@knobin.com',
     subject: 'ERA Imports: New Personal Quote Request',
-    text: 'Quote Accepted\n' + req.body.name + '\r\n\r\n' +
-          req.body.pickupcountry + '\r\n\r\n' +
-          req.body.pickupsuburb + '\r\n\r\n' +
-          req.body.destination + '\r\n\r\n' +
-          req.body.incoterms + '\r\n\r\n' +
-          req.body.shippingspeed + '\r\n\r\n' +
-          req.body.packaging + '\r\n\r\n' +
-          req.body.noOfBoxes + '\r\n\r\n' +
-          req.body.length + '\r\n\r\n' +
-          req.body.width + '\r\n\r\n' +
-          req.body.height + '\r\n\r\n' +
-          req.body.weight + '\r\n\r\n'
+    html: "<style>table{text-align:left;border-collapse: collapse;}th{border: 1px solid #2e3690;background:#2e3690;color:white;padding:10px;}td{padding:10px;border: 1px solid #2e3690;}</style>" +
+          "<h1>New Quote Request</h1>" + "<p>Hello Big E Imports, there is a new quote request in your system! Please check details below.</p><br><br>" +
+          "<table><tr><th><b>Customer Name: </b></th>" + "<td>" +req.body.name + "</td></tr>" +
+          "<tr><th><b>Pickup Country: </b></th>" + "<td>"  + req.body.pickupcountry + "</td></tr>" +
+          "<tr><th><b>Pickup Suburb: </b></th>" + "<td>"  + req.body.pickupsuburb + "</td></tr>" +
+          "<tr><th><b>Destination Country: </b></th>" + "<td>"  + req.body.destination + "</td></tr>" +
+          "<tr><th><b>Incoterms: </b></th>" + "<td>"  + req.body.incoterms + "</td></tr>" +
+          "<tr><th><b>Shipping Speed: </b></th>" + "<td>"  + req.body.shippingspeed + "</td></tr>" +
+          "<tr><th><b>Type of Packaging: </b></th>" + "<td>"  + req.body.packaging + "</td></tr>" +
+          "<tr><th><b>No. Of Boxes: </b></th>" + "<td>"  + req.body.noOfBoxes + "</td></tr>" +
+          "<tr><th><b>Length: </b></th>" + "<td>"  + req.body.length + "</td></tr>" +
+          "<tr><th><b>Width: </b></th>" + "<td>"  + req.body.width + "</td></tr>" +
+          "<tr><th><b>Height: </b></th>" + "<td>"  + req.body.height + "</td></tr>" +
+          "<tr><th><b>Weight: </b></th>" + "<td>"  + req.body.weight + "</td></tr></table>"
   };
     
   mail.sendMail(mailOptions, function(error, info){
@@ -307,5 +422,63 @@ router.post('/request-quote', function(req, res, next) {
     }
   });
 });
- 
+
+
+/* ADD FREIGHT CHARGE */
+
+router.post('/add-charge', function(req, res, next) {
+     
+   
+  var freightCharges = new freightChargeModel({
+    origin: req.body.origin,
+    originCountry: req.body.originCountry,
+    originPort: req.body.originPort,
+    originAirport: req.body.originAirport,
+    shippingMethod: req.body.shippingMethod,
+    shippingSpeed:req.body.shippingSpeed,
+    containerSize: req.body.containerSize,
+    originCharges: req.body.originCharges,
+    portToPortCharges: req.body.portToPortCharges,
+    handlingFees: req.body.handlingFees,
+    congestionFees: req.body.congestionFees,
+    additionalCharges: req.body.additionalCharges,
+    exchangeRate: req.body.exchangeRate,
+    totalOriginCharges: req.body.totalOriginCharges,
+    airFreightRate: req.body.airFreightRate,
+    documentationFee: req.body.documentationFee,
+    cartageFromOrigin: req.body.cartageFromOrigin,
+    localPortCharges: req.body.localPortCharges,
+    terminalHandlingFee: req.body.terminalHandlingFee,
+    shipdocsFee: req.body.shipdocsFee,
+    DOFee: req.body.DOFee,
+    SeaCargoAutFee: req.body.SeaCargoAutFee,
+    CMRFee: req.body.CMRFee,
+    localTransportCharges: req.body.localTransportCharges,
+    cartageFee: req.body.cartageFee,
+    portInfraFee: req.body.portInfraFee,
+    wharfSlotFee: req.body.wharfSlotFee,
+    CORFee: req.body.CORFee,
+    fuelSurcharge: req.body.fuelSurcharge,
+    tollFee: req.body.tollFee,
+    dehireFee: req.body.dehireFee,
+    ITF: req.body.ITF,
+    ADF: req.body.ADF,
+    AHF: req.body.AHF,
+    cargoReportingFee: req.body.cargoReportingFee,
+    ACA: req.body.ACA,
+    postage: req.body.postage,
+    basefee: req.body.basefee
+  });
+   
+  freightCharges .save((err, doc) => {
+        if (!err){
+            req.flash('success', 'Freight charge added successfully!');
+            console.log('Freight Charge added successfully!');
+            res.redirect('/admin-dashboard');}
+        else{
+            console.log('Error during record insertion : ' + err);}
+  });
+
+});
+
 module.exports = router;

@@ -20,7 +20,7 @@
                 <a href="/quote-portal">Quote Calculator</a>
                 <a href="/accepted-quotes">Accepted Quotes</a>
                 <a href="/drafted-quotes">Draft Quotes</a>
-                <a href="/my-quote-requests" class="active">Requested Quotes</a>
+                <a href="/my-quote-requests" class="active">Custom Quote Requests</a>
               </div>
         </div>
         <div class="column-2" >
@@ -34,7 +34,7 @@
                 <div class="form-group2">
                   <div class="form-cell">
                     <label for="name">Name</label>
-                    <input required type="text" class="form-control"  id="name" aria-describedby="emailHelp" placeholder="Enter Name:" name="name">
+                    <input disabled type="text" class="form-control"  id="name" aria-describedby="emailHelp" placeholder="Enter Name:" name="name" value="<%= data[0].name%>">
                   </div>
                   
                 </div>
@@ -61,11 +61,9 @@
                 <div class="form-group2">
 
                   <div class="form-cell">
-                    <label for="destination">Destination Country:</label>
-                    <select required class="form-control" name="destination" id="destination">
-                        <option value="Australia">Australia</option>
-                        <option value="United States">USA</option>
-                    </select>
+                    <label for="destination">Destination Address:</label>
+                    <input  type="text"  class="form-control"  id="name" aria-describedby="emailHelp" placeholder="Enter Name:" name="name" value="<%= data[0].deliveryAddress%>">
+                  
                   </div>
                   
 

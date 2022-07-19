@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Draft Quotes</title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="https://kit.fontawesome.com/a2c9d7080d.js" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+</head>
+<body>
+    <!-- include header -->
+    <%- include('include/header') %>
+    <!-- /include header -->
+
+    <div class="main-content">
+      <div class="row">
+        <div class="column-1" >
+            <div class="vertical-menu">
+              <a href="/accepted-quotes-admin" class="active">Accepted Quotes Admin</a>
+              <a href="/accepted-quotes">Freight Charges</a>
+              <a href="include/custom-quote-requests.ejs">Custom Quote Requests</a>
+            </div>
+        </div>
+        <div class="column-2" >
+          <h2>Accepted Quotes</h2>
+            <% if (messages.success) { %>
+                <p class="alert alert-success mt-4"><%- messages.success %></p>
+            <% } %>  
+            <br>
+              <table class="table">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Date Created</th>
+                <th scope="col">Name</th>
+                <th scope="col">Incoterms</th>
+                <th scope="col">Shipping Speed</th>
+                <th scope="col">Quote Price</th>
+                <th scope="col">Shipment Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if(data.length){
+             
+              for(var i = 0; i< data.length; i++) {%>  
+              <tr>
+                <th scope="row"><%= (i+1) %></th>
+                <td><%= data[i].createdAt%></td>
+                <td><%= data[i].name%></td>
+                <td><%= data[i].incoterms%></td>
+                <td><%= data[i].shippingspeed%></td>
+                <td><%= data[i].quoteprice%></td>
+                <td><%= data[i].status%></td>
+                <td>
+                  <a href="/update-quote?id=<%= data[i]._id%>" class="btn border-shadow update">
+                    <span><i class="fas fa-pencil-alt"></i></span>
+                  </a>
+                  
+                </td>
+              </tr>
+              <% }
+                       
+               }else{ %>
+                   <tr>
+                      <td colspan="7">No quotes to show</td>
+                   </tr>
+                <% } %>    
+              
+            </tbody>
+            </table>
+        </div>
+      </div>
+    </div>
+
+    
+</body>
+</html>
