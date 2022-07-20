@@ -331,6 +331,7 @@ router.post('/generate-quote', function(req, res, next) {
         var ITF = parseFloat(docs[0].ITF);
         var AHF = parseFloat(docs[0].AHF);
         var localTransportCharges = parseFloat(docs[0].localTransportCharges);
+        var localPortCharges = parseFloat(docs[0].localPortCharges);
         var chargeableWeight = parseFloat(req.body.chargeableWeight);
         var totalOriginCharges = parseFloat(docs[0].totalOriginCharges);
         var exchangeRate = parseFloat(docs[0].exchangeRate);
@@ -369,6 +370,39 @@ router.post('/generate-quote', function(req, res, next) {
             chargeableWeight: req.body.chargeableWeight,
             totalOriginCharges: totalOriginCharges,
             localPortCharges: '0',
+            localTransportCharges: localTransportCharges,
+            quoteprice: quoteprice
+          });
+          res.render('generated-quote', {data:result});
+        }
+        else if(docs[0].shippingMethod === "Sea Freight" && docs[0].containerSize === "40' FCL GP"){
+          if(req.body.incoterms === "EXW"){
+            quoteprice = totalOriginCharges + localPortCharges + 2000;
+            console.log(quoteprice);
+          }
+          else{
+            quoteprice = totalOriginCharges + localPortCharges;
+            console.log(quoteprice);
+          }
+          result.push({
+            name:req.body.name,
+            pickupcountry:req.body.pickupcountry,
+            loadingPort: req.body.loadingPort,
+            incoterms: req.body.incoterms,
+            pickupAddress: req.body.pickupAddress,
+            deliveryAddress: req.body.deliveryAddress,
+            shippingSpeed: req.body.shippingSpeed,
+            shippingMethod: req.body.shippingMethod,
+            withPallet: req.body.withPallet,
+            containerSize: req.body.containerSize,
+            length: req.body.length,
+            width: req.body.width,
+            height: req.body.height,
+            weight: req.body.weight,
+            noOfBoxes: req.body.noOfBoxes,
+            chargeableWeight: req.body.chargeableWeight,
+            totalOriginCharges: totalOriginCharges,
+            localPortCharges: localPortCharges,
             localTransportCharges: localTransportCharges,
             quoteprice: quoteprice
           });
@@ -432,7 +466,7 @@ router.post('/accept-quote', function(req, res, next) {
 
   var mailOptions = {
     from: 'bigeimports@gmail.com',
-    to: 'divine.adriano@knobin.com',
+    to: 'divine.adriano@knobin.com, adrianodivine@gmail.com',
     subject: 'New Shipping Quote Accepted!',
     html: "<style>table{text-align:left;border-collapse: collapse;}th{border: 1px solid #2e3690;background:#2e3690;color:white;padding:10px;}td{padding:10px;border: 1px solid #2e3690;}</style>" +
           "<h1>New Quote Accepted</h1>" + "<p>Hello Big E Imports, A new quotation has been accepted in your system! Please check details below.</p><br><br>" +
