@@ -487,12 +487,12 @@ router.post('/save-quote', function(req, res, next) {
   });
    
   quoteDetails .save((err, doc) => {
-        if (!err){
-          req.flash('success', 'Quote saved in drafts!');
-            console.log('Quote saved in drafts!');
-            res.redirect('/drafted-quotes');}
-        else{
-            console.log('Error during record insertion : ' + err);}
+    if (!err){
+      req.flash('success', 'Quote saved in drafts!');
+      console.log('Quote saved in drafts!');
+      res.redirect('/drafted-quotes');}
+    else{
+      console.log('Error during record insertion : ' + err);}
   });
 
   
