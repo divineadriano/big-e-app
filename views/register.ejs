@@ -1,12 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>ERA Imports Quote Portal Registration Form</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <title>Big E Imports Customer Sign Up</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://kit.fontawesome.com/a2c9d7080d.js" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
   </head>
   <body>
+     <!-- include header -->
+     <%- include('include/header-no-session') %>
+     <!-- /include header -->
     <div class="container mt-4">
       <div class="card">
         <div class="card-body">
@@ -15,29 +20,32 @@
           <form action="add-user" method="POST">
             <div class="form-group2">
               <label for="name">Name</label>
-              <input required type="text" class="form-control col-lg-9" id="name" aria-describedby="emailHelp" placeholder="Enter Name:" name="name">
+              <input required type="text" class="form-control" id="name" aria-describedby="emailHelp" placeholder="Enter Name:" name="name">
             </div>
             <div class="form-group2">
               <label for="companyName">Company Name:</label>
-              <input required type="text" class="form-control col-lg-9" id="companyName" aria-describedby="emailHelp" placeholder="Enter Company Name:" name="companyName">
+              <input required type="text" class="form-control" id="companyName" aria-describedby="emailHelp" placeholder="Enter Company Name:" name="companyName">
             </div>
             <div class="form-group2">
               <label for="email">Email address</label>
-              <input required type="email" class="form-control col-lg-9" id="email" aria-describedby="emailHelp" name="email" placeholder="Enter email">
+              <input required type="email" class="form-control" id="email" aria-describedby="emailHelp" name="email" placeholder="Enter email">
             </div>
             <div class="form-group2">
               <label for="password">Password</label>
-              <input required type="password" class="form-control col-lg-9" id="password" aria-describedby="emailHelp" name="password" placeholder="Enter password">
+              <input required type="password" class="form-control" id="password" aria-describedby="emailHelp" name="password" placeholder="Enter password">
             </div>
             <div class="form-group2">
                 <label for="phone">Phone</label>
-                <input required type="phone" class="form-control col-lg-9" id="phone" aria-describedby="emailHelp" name="phone" placeholder="Enter Phone Number">
+                <input required type="phone" class="form-control" id="phone" aria-describedby="emailHelp" name="phone" placeholder="Enter Phone Number">
             </div>     
             <div class="form-group2">
                 <label for="deliveryAddress">Address</label>
-                <input required type="text" class="form-control col-lg-9" id="deliveryAddress" aria-describedby="emailHelp" name="deliveryAddress" placeholder="Enter Address">
+                <input required type="text" class="form-control" id="deliveryAddress" aria-describedby="emailHelp" name="deliveryAddress" placeholder="Enter Address">
             </div>       
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <br>
+              <span>Already have an account? <a href="/login">Login Here</a></span>
+              <br><br>
+            <button type="submit" class="btn btn-primary">Sign Up</button>
           </form>
     </div>
   </div>

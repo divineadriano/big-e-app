@@ -1,11 +1,35 @@
 <!-- Header -->
+<style>
+  .header-form {
+    float: right;
+  }
+  .header-form button{
+    padding: 15px;
+    vertical-align: middle;
+    background-color: transparent;
+    border: none;
+    color:white;
+    font-weight: bold;
+  }
+
+  .header-form button:hover{
+    background-color: #Dc3336;
+    border: none !important;
+  }
+
+  .header-form button:active{
+    background-color: #Dc3336;
+    border: none !important;
+  }
+</style>
 <header id="header">
    
 
     <div class="topnav">
-        <a title="BigE Imports Logo">Big E Imports</a>
-        <form action="/logout" method="post"><button type="submit" class="btn btn-primary">Log Out</button></form>
+        <img src="public/images/logo.png" alt="Big E Imports">
+        <form class="header-form" action="/logout" method="post"><button type="submit" >Log Out</button></form>
         
       </div>
 </header>
 <!-- /Header -->
+

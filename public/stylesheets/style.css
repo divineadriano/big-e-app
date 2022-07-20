@@ -49,7 +49,10 @@ a {
   text-decoration:none;
 }
 
-
+label{
+    font-weight: bold;
+    color: #2c3690;
+}
 
 .vertical-menu a {
   color: black;

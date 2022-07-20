@@ -1,32 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>ERA Imports Quote Portal Login Form</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <title>Big E Imports Customer Log In</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://kit.fontawesome.com/a2c9d7080d.js" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
   </head>
   <body>
+
+    <!-- include header -->
+    <%- include('include/header-no-session') %>
+    <!-- /include header -->
+          
+    <!-- login form -->
     <div class="container mt-4">
       <div class="card">
         <div class="card-body">
-          
- 
           <form action="authenticate" method="post">
-            <div class="form-group2">
               <label for="email">Email address</label>
-              <input type="email" class="form-control col-lg-9" id="email" aria-describedby="emailHelp" name="email" placeholder="Enter email">
-            </div>
-            <div class="form-group2">
+              <input type="email" class="form-control " id="email" aria-describedby="emailHelp" name="email" placeholder="Enter email">
+              <br>
               <label for="password">Password</label>
-              <input type="password" class="form-control col-lg-9" id="password" aria-describedby="emailHelp" name="password" placeholder="Enter password">
-            </div>
-            
-            <button type="submit" class="btn btn-primary">Login</button>
+              <input type="password" class="form-control " id="password" aria-describedby="emailHelp" name="password" placeholder="Enter password">
+              <br>
+              <span>Do not have an account yet? <a href="/">Sign Up Here</a></span>
+              <br><br>
+              <button type="submit" class="btn btn-primary">Login</button>
           </form>
+        </div>
+      </div>
     </div>
-  </div>
-    </div>
-    <div></div>
   </body>
 </html>
