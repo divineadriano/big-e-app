@@ -228,12 +228,8 @@ router.get('/freight-charges', function(req, res, next) {
     
   freightChargeModel.find((err, docs) => {
       if (!err) {
-        if(req.session.user){
           res.render('freight-charges', {data: docs});
-        }
-        else{
-          res.redirect('/login');
-        }  
+        
                    
       } else {
           console.log('Failed to retrieve freight charges list: ' + err);
@@ -631,14 +627,17 @@ router.post('/request-quote', function(req, res, next) {
 
 router.post('/add-charge', function(req, res, next) {
      
-   
+  var containertype = req.body.containerSize;
+  if(req.body.shippingMethod === 'Air Freight'){
+    containertype = 'not applicable';
+  } 
   var freightCharges = new freightChargeModel({
     origin: req.body.origin,
     originCountry: req.body.originCountry,
     loadingPort: req.body.loadingPort,
     shippingMethod: req.body.shippingMethod,
     shippingSpeed: req.body.shippingSpeed,
-    containerSize: req.body.containerSize,
+    containerSize: containertype,
     originCharges: req.body.originCharges,
     portToPortCharges: req.body.portToPortCharges,
     handlingFees: req.body.handlingFees,
@@ -685,7 +684,7 @@ router.post('/add-charge', function(req, res, next) {
 
 
 router.post('/update-charge', function(req, res, next) {
-   
+
   const id = req.body.id;
     freightChargeModel.findByIdAndUpdate(id, req.body, { useFindAndModify: false})
         .then(data => {

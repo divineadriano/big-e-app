@@ -63,7 +63,8 @@
             <br>
             <% if(data.length){
              
-              for(var i = 0; i< data.length; i++) {%>  
+              for(var i = 0; i< data.length; i++) {
+                if(data[i].shippingMethod === 'Sea Freight'){%>  
               <table style="table-layout: fixed;text-align:left;">
                 
               <tr>
@@ -72,7 +73,7 @@
                     <td colspan="3"><%= data[i].loadingPort%></td>
                     <td class="td-button">
                       <a href="/update-freight?id=<%= data[i]._id%>" class="btn update">
-                        <span><i class="fas fa-pencil-alt"> Update Freight Charge</i></span>
+                        <span><i class="fas fa-pencil-alt"> Update</i></span>
                       </a>
                     </td>
                   </tr>
@@ -82,7 +83,7 @@
                   <tr><th scope="col">Shipping Method</th><td><%= data[i].shippingMethod%></td><th scope="col">Shipping Speed</th><td><%= data[i].shippingSpeed%></td></tr>
                   <tr><th scope="col">Container Type</th><td><%= data[i].containerSize%></td><th scope="col">Origin Charges</th><td><%= data[i].originCharges%></td></tr>
                   <tr><th scope="col">Port to Port Charges</th><td><%= data[i].portToPortCharges%></td><th scope="col">Handling Fees</th><td><%= data[i].handlingFees%></td></tr>
-                  <tr><th scope="col">Additional Charges</th><td><%= data[i].containerSize%></td><th scope="col">Origin Charges</th><td><%= data[i].additionalCharges%></td></tr>
+                  <tr><th scope="col">Additional Charges</th><td><%= data[i].additionalCharges%></td><th scope="col">Origin Charges</th><td><%= data[i].additionalCharges%></td></tr>
                   
                 </tbody>
                 
@@ -91,10 +92,36 @@
             </table>
             <br>
               <% }
+            else{ %>
+              <table style="table-layout: fixed;text-align:left;">
+                
+                <tr>
+                  <thead >
+                    <tr>
+                      <td colspan="3"><%= data[i].loadingPort%></td>
+                      <td class="td-button">
+                        <a href="/update-freight?id=<%= data[i]._id%>" class="btn update">
+                          <span><i class="fas fa-pencil-alt"> Update</i></span>
+                        </a>
+                      </td>
+                    </tr>
+                </thead>
+                  <tbody>
+                    <tr><th scope="col">Loading Port</th><td><%= data[i].loadingPort%></td><th scope="col">Origin Country</th><td><%= data[i].originCountry%></td></tr>
+                    <tr><th scope="col">Shipping Method</th><td><%= data[i].shippingMethod%></td><th scope="col">Shipping Speed</th><td><%= data[i].shippingSpeed%></td></tr>
+                    <tr><th scope="col">Documentation Fee</th><td><%= data[i].documentationFee%></td><th scope="col">Cartage from Origin</th><td><%= data[i].cartageFromOrigin%></td></tr>
+                    <tr><th scope="col">Import Terminal Fee</th><td><%= data[i].ITF%></td><th scope="col">Airline Document Fee</th><td><%= data[i].ADF%></td></tr>
+                    <tr><th scope="col">Airport Handling Fee/th><td><%= data[i].AHF%></td><th scope="col">Air Cargo Automation</th><td><%= data[i].ACA%></td></tr>
+                    
+                  </tbody>
+                  
+                </tr>
+                
+              </table>
+              <br>
+              <% }}
                        
-               }else{ %>
-                   
-                <% } %>    
+               }%>    
               
             
         </div>

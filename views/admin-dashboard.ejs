@@ -265,9 +265,9 @@
                     <input type="number" class="form-control"  id="tollFee" name="tollFee" onkeyup="computeTransportCharges()">
                   </div>
 
-                  <div class="form-cell seaFreight">
+                  <div class="form-cell">
                     <label for="dehireFee">De-Hire/ Empty Fee:</label>
-                    <input type="number" class="form-control"  id="dehireFee" name="dehireFee" onkeyup="computeTransportCharges()">
+                    <input type="number" class="form-control seaFreight"  id="dehireFee" name="dehireFee" onkeyup="computeTransportCharges()">
                   </div>
 
                   <div class="form-cell">
@@ -293,21 +293,17 @@
              
               for (var i = 0; i < airFreight.length; i ++) {
                   airFreight[i].readOnly = true;
-                  airFreight[i].disabled = true;
               }
               for (var i = 0; i < seaFreight.length; i ++) {
                   seaFreight[i].readOnly = false;
-                  seaFreight[i].disabled = false;
               }
             }
             else{
               for (var i = 0; i < seaFreight.length; i ++) {
                 seaFreight[i].readOnly = true;
-                  seaFreight[i].disabled = true;
               }
               for (var i = 0; i < airFreight.length; i ++) {
                 airFreight[i].readOnly = false;
-                  airFreight[i].disabled = false;
               }
             }
           }
