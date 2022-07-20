@@ -369,16 +369,21 @@ router.post('/accept-quote', function(req, res, next) {
           "<h1>New Quote Accepted</h1>" + "<p>Hello Big E Imports, A new quotation has been accepted in your system! Please check details below.</p><br><br>" +
           "<table><tr><th><b>Customer Name: </b></th>" + "<td>" +req.body.name + "</td></tr>" +
           "<tr><th><b>Pickup Country: </b></th>" + "<td>"  + req.body.pickupcountry + "</td></tr>" +
-          "<tr><th><b>Pickup Suburb: </b></th>" + "<td>"  + req.body.pickupsuburb + "</td></tr>" +
-          "<tr><th><b>Destination Country: </b></th>" + "<td>"  + req.body.destination + "</td></tr>" +
+          "<tr><th><b>Loading Port: </b></th>" + "<td>"  + req.body.loadingPort + "</td></tr>" +
+          "<tr><th><b>Pickup Address: </b></th>" + "<td>"  + req.body.pickupAddress + "</td></tr>" +
+          "<tr><th><b>Delivery Address: </b></th>" + "<td>"  + req.body.deliveryAddress + "</td></tr>" +
           "<tr><th><b>Incoterms: </b></th>" + "<td>"  + req.body.incoterms + "</td></tr>" +
+          "<tr><th><b>Shipping Method: </b></th>" + "<td>"  + req.body.shippingMethod + "</td></tr>" +
           "<tr><th><b>Shipping Speed: </b></th>" + "<td>"  + req.body.shippingSpeed + "</td></tr>" +
-          "<tr><th><b>Type of Packaging: </b></th>" + "<td>"  + req.body.packaging + "</td></tr>" +
           "<tr><th><b>No. Of Boxes: </b></th>" + "<td>"  + req.body.noOfBoxes + "</td></tr>" +
+          "<tr><th><b>Should we put your boxes in a pallet? </b></th>" + "<td>"  + req.body.withPallet + "</td></tr>" +
           "<tr><th><b>Length: </b></th>" + "<td>"  + req.body.length + "</td></tr>" +
           "<tr><th><b>Width: </b></th>" + "<td>"  + req.body.width + "</td></tr>" +
           "<tr><th><b>Height: </b></th>" + "<td>"  + req.body.height + "</td></tr>" +
           "<tr><th><b>Weight: </b></th>" + "<td>"  + req.body.weight + "</td></tr>" +
+          "<tr><th><b>Origin Charges: </b></th>" + "<td>"  + req.body.totalOriginCharges + "</td></tr>" +
+          "<tr><th><b>Local Port Charges: </b></th>" + "<td>"  + req.body.localPortCharges + "</td></tr>" +
+          "<tr><th><b>Local Transport / Delivery Charges: </b></th>" + "<td>"  + req.body.localTransportCharges + "</td></tr>" +
           "<tr><th><b>Quotation Price </b></th>" + "<td>"  + req.body.quoteprice + "</td></tr></table>"
    
   };
