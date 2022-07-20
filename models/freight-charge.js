@@ -19,10 +19,7 @@ const freightChargeSchema = new Schema({
     originCountry:{
         type:String
     },
-    originPort:{
-        type:String
-    },
-    originAirport:{
+    loadingPort:{
         type:String
     },
     shippingMethod:{

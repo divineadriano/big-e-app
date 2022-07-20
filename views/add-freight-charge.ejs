@@ -50,14 +50,11 @@
                       </select>
                     </div>
 
-                    <div class="form-cell airFreight">
-                      <label for="originAirport">Airport of Loading</label>
-                      <input  type="text" class="form-control"  id="originAirport"  name="originAirport">
-                    </div>
+                    
 
-                    <div class="form-cell seaFreight">
-                      <label for="originPort">Port of Loading</label>
-                      <input  type="text" class="form-control"  id="originPort"  name="originPort">
+                    <div class="form-cell ">
+                      <label for="loadingPort">Loading Port / Airport</label>
+                      <input  type="text" class="form-control"  id="loadingPort"  name="loadingPort">
                     </div>
 
                     <div class="form-cell">
@@ -376,7 +373,7 @@
                 
               }
               else if (shippingMethod === "Air Freight"){
-                  localTransportCharges.value = cartageFee +  fuelSurcharge + tollFee + ADF + ACA + cargoReportingFee + postage + base;
+                  localTransportCharges.value = fuelSurcharge + tollFee + ADF + ACA + cargoReportingFee + postage + base;
                   console.log(localTransportCharges.value);
                 
               }

@@ -94,7 +94,7 @@ router.post('/authenticate', function(req, res, next) {
                     res.redirect('/admin-dashboard');
                   }
                   else{
-                    res.render('quote-portal', {data: docs});
+                    res.redirect('/quote-portal');
                   }
                   
                 } else {
@@ -252,28 +252,99 @@ router.get('/update-quote', services.update_quote);
 router.put('/api/quote/:id', controller.update);
 router.delete('/api/quote/:id', controller.delete);
 
+/* Generate Quote */
+router.post('/generate-quote', function(req, res, next) {
+  
+  var result = [];
+  const query = { "loadingPort": req.body.loadingPort };
+  var quoteprice;
+  freightChargeModel.find( query, (err, docs) => {
+      if (!err) {
+        var airFreightRate = parseFloat(docs[0].airFreightRate);
+        var cartageFromOrigin = parseFloat(docs[0].cartageFromOrigin);
+        var cartageFee = parseFloat(docs[0].cartageFee);
+        var ITF = parseFloat(docs[0].ITF);
+        var AHF = parseFloat(docs[0].AHF);
+        var localTransportCharges = parseFloat(docs[0].localTransportCharges);
+        var chargeableWeight = parseFloat(req.body.chargeableWeight);
+        var totalOriginCharges = parseFloat(docs[0].totalOriginCharges);
+        var exchangeRate = parseFloat(docs[0].exchangeRate);
+        console.log(req.body.pickupAddress);
+        console.log(req.body.name);
+        console.log(req.body.deliveryAddress);
+        if(docs[0].shippingMethod === "Air Freight"){
+          ITF = ITF * chargeableWeight
+          AHF = AHF * chargeableWeight
+          cartageFee = cartageFee * chargeableWeight
+          localTransportCharges = localTransportCharges + ITF + AHF + cartageFee;
+          totalOriginCharges = (totalOriginCharges + (airFreightRate*chargeableWeight) + (cartageFromOrigin*chargeableWeight))*exchangeRate;
+          quoteprice = totalOriginCharges + ((ITF*chargeableWeight) + (AHF*chargeableWeight) + (cartageFee*chargeableWeight));
+          
+
+          result.push({
+            name:req.body.name,
+            pickupcountry:req.body.pickupcountry,
+            loadingPort: req.body.loadingPort,
+            incoterms: req.body.incoterms,
+            pickupAddress: req.body.pickupAddress,
+            deliveryAddress: req.body.deliveryAddress,
+            shippingSpeed: req.body.shippingSpeed,
+            shippingMethod: req.body.shippingMethod,
+            withPallet: req.body.withPallet,
+            containerSize: req.body.containerSize,
+            length: req.body.length,
+            width: req.body.width,
+            height: req.body.height,
+            weight: req.body.weight,
+            noOfBoxes: req.body.noOfBoxes,
+            chargeableWeight: req.body.chargeableWeight,
+            totalOriginCharges: totalOriginCharges,
+            localPortCharges: '',
+            localTransportCharges: localTransportCharges,
+            quoteprice: quoteprice
+          });
+          res.render('generated-quote', {data:result});
+        }
+        else{
+          console.log(err);
+        }
+                   
+      } else {
+          console.log('Failed to retrieve the Course List: ' + err);
+      }
+  });
+
+});
+
 /* ACCEPT Quote*/
 router.post('/accept-quote', function(req, res, next) {
     
   
   var quoteDetails = new quoteModel({
-    name: req.body.name,
-    pickupcountry: req.body.pickupcountry,
-    pickupsuburb: req.body.pickupsuburb,
-    destination: req.body.destination,
+    name:req.body.name,
+    pickupcountry:req.body.pickupcountry,
+    loadingPort: req.body.loadingPort,
     incoterms: req.body.incoterms,
-    shippingspeed: req.body.shippingspeed,
-    packaging: req.body.packaging,
-    noOfBoxes: req.body.noOfBoxes,
+    pickupAddress: req.body.pickupAddress,
+    deliveryAddress: req.body.deliveryAddress,
+    shippingSpeed: req.body.shippingSpeed,
+    shippingMethod: req.body.shippingMethod,
+    withPallet: req.body.withPallet,
+    containerSize: req.body.containerSize,
     length: req.body.length,
     width: req.body.width,
     height: req.body.height,
     weight: req.body.weight,
+    noOfBoxes: req.body.noOfBoxes,
+    chargeableWeight: req.body.chargeableWeight,
+    totalOriginCharges: req.body.chargeableWeight,
+    localPortCharges: req.body.localPortCharges,
+    localTransportCharges: req.body.localTransportCharges,
     quoteprice: req.body.quoteprice,
     tag: "Accepted"
   });
    
-  quoteDetails .save((err, doc) => {
+  quoteDetails.save((err, doc) => {
         if (!err){
           req.flash('success', 'Quote saved successfully!');
             console.log('Quote Accepted!');
@@ -301,7 +372,7 @@ router.post('/accept-quote', function(req, res, next) {
           "<tr><th><b>Pickup Suburb: </b></th>" + "<td>"  + req.body.pickupsuburb + "</td></tr>" +
           "<tr><th><b>Destination Country: </b></th>" + "<td>"  + req.body.destination + "</td></tr>" +
           "<tr><th><b>Incoterms: </b></th>" + "<td>"  + req.body.incoterms + "</td></tr>" +
-          "<tr><th><b>Shipping Speed: </b></th>" + "<td>"  + req.body.shippingspeed + "</td></tr>" +
+          "<tr><th><b>Shipping Speed: </b></th>" + "<td>"  + req.body.shippingSpeed + "</td></tr>" +
           "<tr><th><b>Type of Packaging: </b></th>" + "<td>"  + req.body.packaging + "</td></tr>" +
           "<tr><th><b>No. Of Boxes: </b></th>" + "<td>"  + req.body.noOfBoxes + "</td></tr>" +
           "<tr><th><b>Length: </b></th>" + "<td>"  + req.body.length + "</td></tr>" +
@@ -332,7 +403,7 @@ router.post('/save-quote', function(req, res, next) {
     pickupsuburb: req.body.pickupsuburb,
     destination: req.body.destination,
     incoterms: req.body.incoterms,
-    shippingspeed: req.body.shippingspeed,
+    shippingSpeed: req.body.shippingSpeed,
     packaging: req.body.packaging,
     noOfBoxes: req.body.noOfBoxes,
     length: req.body.length,
@@ -366,7 +437,7 @@ router.post('/request-quote', function(req, res, next) {
     pickupsuburb: req.body.pickupsuburb,
     destination: req.body.destination,
     incoterms: req.body.incoterms,
-    shippingspeed: req.body.shippingspeed,
+    shippingSpeed: req.body.shippingSpeed,
     packaging: req.body.packaging,
     noOfBoxes: req.body.noOfBoxes,
     length: req.body.length,
@@ -405,7 +476,7 @@ router.post('/request-quote', function(req, res, next) {
           "<tr><th><b>Pickup Suburb: </b></th>" + "<td>"  + req.body.pickupsuburb + "</td></tr>" +
           "<tr><th><b>Destination Country: </b></th>" + "<td>"  + req.body.destination + "</td></tr>" +
           "<tr><th><b>Incoterms: </b></th>" + "<td>"  + req.body.incoterms + "</td></tr>" +
-          "<tr><th><b>Shipping Speed: </b></th>" + "<td>"  + req.body.shippingspeed + "</td></tr>" +
+          "<tr><th><b>Shipping Speed: </b></th>" + "<td>"  + req.body.shippingSpeed + "</td></tr>" +
           "<tr><th><b>Type of Packaging: </b></th>" + "<td>"  + req.body.packaging + "</td></tr>" +
           "<tr><th><b>No. Of Boxes: </b></th>" + "<td>"  + req.body.noOfBoxes + "</td></tr>" +
           "<tr><th><b>Length: </b></th>" + "<td>"  + req.body.length + "</td></tr>" +
@@ -432,8 +503,7 @@ router.post('/add-charge', function(req, res, next) {
   var freightCharges = new freightChargeModel({
     origin: req.body.origin,
     originCountry: req.body.originCountry,
-    originPort: req.body.originPort,
-    originAirport: req.body.originAirport,
+    loadingPort: req.body.loadingPort,
     shippingMethod: req.body.shippingMethod,
     shippingSpeed:req.body.shippingSpeed,
     containerSize: req.body.containerSize,

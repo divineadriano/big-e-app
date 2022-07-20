@@ -36,17 +36,25 @@
                 
                 <h2>Automatic Quote Calculator</h2>
        
-                <form action="accept-quote" method="POST">
+                <form action="generate-quote" method="POST">
+                  <hr>
+                  <h4>Customer Information</h4>
+                  
                   <div class="form-group2">
+                    
                     <div class="form-cell">
                       <label for="name">Name</label>
-                      <input  type="text" class="form-control" disabled id="name" aria-describedby="emailHelp" placeholder="Enter Name:" name="name" value="<%= data[0].name%>">
+                      <input  type="text" class="form-control" readonly  id="name" aria-describedby="emailHelp" placeholder="Enter Name:" name="name" value="<%= data[0].name%>">
                     </div>
                     
                   </div>
+
+                  <hr>
+                  <h4>Origin</h4>
                   <div class="form-group2">
+                    
                     <div class="form-cell">
-                      <label for="pickupcountry" >Pickup Country:</label>
+                      <label for="pickupcountry" >Origin Country:</label>
                         <select required  class="form-control" name="pickupcountry" id="pickupcountry">
                             <option value="China">China</option>
                             <option value="United States">USA</option>
@@ -54,102 +62,128 @@
                     </div>
                     
                     <div class="form-cell">
-                      <label for="pickupsuburb" >Pickup Suburb:</label>
-                        <select required  class="form-control" name="pickupsuburb" id="pickupsuburb">
-                            <option value="Ningbo">Ningbo</option>
-                            <option value="Yiwu">Yiwu</option>
+                      <label for="loadingPort" >Port / Airport of Loading:</label>
+                        <select required  class="form-control" name="loadingPort" id="loadingPort">
+                            <option value="CN PVG - Shanghai Pudong International Airport">AIR - CN PVG - Shanghai Pudong International Airport</option>
+                            <option value="CNPEK, Beijing">AIR - CNPEK, Beijing</option>
+                            <option value="CNCAN -  GUANGZHOU">AIR - CNCAN -  GUANGZHOU</option>
+                            <option value="O'hare Airport Chicago">AIR - O'hare Airport Chicago</option>
+                            <option value="Garden City Regional Airport">AIR - Garden City Regional Airport</option>
+                            <option value="Shanghai Pudong International Airport">SEA - Shekou Port</option>
+                            <option value="CNSHG - Shanghai Port">SEA - CNSHG - Shanghai Port</option>
                         </select>
                     </div>
-                    
-                  </div>
-                  
-  
-                  <div class="form-group2">
-  
-                    <div class="form-cell">
-                      <label for="destination">Destination Address:</label>
-                      <input  type="text" disabled class="form-control"  id="name" aria-describedby="emailHelp" placeholder="Enter Name:" name="name" value="<%= data[0].deliveryAddress%>">
-                    
-                    </div>
-                    
-  
+
                     <div class="form-cell">
                       <label for="incoterms">Incoterms:</label>
-                      <select required class="form-control" name="incoterms" id="incoterms" >
+                      <select required class="form-control" name="incoterms" id="incoterms" onchange="hideAddress()" onfocus="this.selectedIndex = -1;">
                           <option value="EXW">Ex-Works</option>
                           <option value="FOB">Free On-Board</option>
                       </select>
                     </div>
                     
+                  </div>
+
+                  <div class="form-group2 ">
+                    <div class="form-cell EXW">
+                      <label for="pickupAddress">Origin Address:</label>
+                      <input type="String" class="form-control"  id="pickupAddress" name="pickupAddress" >
+                    </div>
+                  </div>
+                  
+                  <hr>
+                  <h4>Destination</h4>
+                  <div class="form-group2">
+                    
                     <div class="form-cell">
-                      <label for="shippingspeed">Shipping Speed:</label>
-                      <select required class="form-control" name="shippingspeed" id="shippingspeed" >
+                      <label for="deliveryAddress">Delivery Address:</label>
+                      <input  type="text"  class="form-control" readonly id="deliveryAddress" aria-describedby="emailHelp" placeholder="Enter Name:" name="deliveryAddress" value="<%= data[0].deliveryAddress%>">
+                    
+                    </div>
+                    
+                    <div class="form-cell">
+                      <label for="shippingMethod">Shipping Method:</label>
+                      <select required class="form-control" name="shippingMethod" id="shippingMethod" >
+                          <option value="Air Freight">Air Freight</option>
+                          <option value="Sea Freight">Sea Freight</option>
+                      </select>
+                    </div>
+                    
+                    
+                    <div class="form-cell">
+                      <label for="shippingSpeed">Shipping Speed:</label>
+                      <select required class="form-control" name="shippingSpeed" id="shippingSpeed" >
                           <option value="Express">Express</option>
                           <option value="Transhipment">Transhipment</option>
+                          <option value="Direct">Direct</option>
                       </select>
                     </div>
-  
-                  </div>
-                  
-  
-                  <div class="form-group2">
-                  
-                    <div class="form-cell">
-                      <label for="shippingmethod">Shipping Method:</label>
-                      <select required class="form-control " name="shippingmethod" id="shippingmethod" onchange="computeQuote()" onfocus="this.selectedIndex = -1;">
-                          <option value="Air Freight">Air Freight</option>
-                          <option value="LCL-20ft">LCL-20ft</option>
-                      </select>
-                    </div>
-  
-                    <div class="form-cell">
-                      <label for="packaging">Packaging:</label>
-                      <select required class="form-control " name="packaging" id="packaging">
-                          <option value="boxes">Boxes</option>
-                          <option value="pallet">Pallet</option>
-                      </select>
-                    </div>
-  
                     
-                    <div class="form-cell">
+                  </div>
+
+                  <div class="form-group2">
+                    <div class="form-cell airFreight">
                       <label for="noOfBoxes">No. of  Boxes:</label>
-                      <input type="number" class="form-control" required id="noOfBoxes" name="noOfBoxes" min="1" max="10">
+                      <input type="number" class="form-control" required id="noOfBoxes" name="noOfBoxes" >
                     </div>
-                    
+
+                    <div class="form-cell airFreight">
+                      <label for="withPallet">Should we put your boxes in a pallet? Additional 20kg</label>
+                      <select required class="form-control " name="withPallet" id="withPallet">
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                    </div>
+
+                    <div class="form-cell seaFreight">
+                      <label for="containerSize">Container Type:</label>
+                      <select  class="form-control " name="containerSize" id="containerSize">
+                        <option value="40' FCL GP">20' FCL GP</option>
+                        <option value="20' FCL GP">40' FCL GP</option>
+                    </select>
+                    </div>
+
+                    <script>
+
+                    </script>
+  
                   </div>
+
                   
-  
-                  
+                  <hr>
+                  <h4>Dimensions / Box</h4>
                   <div class="form-group2">
-  
+                    
   
                     <div class="form-cell">
                       <label for="length">Length (cm):</label>
-                      <input type="number" class="form-control" required id="length" name="length" min="1" max="100" onkeyup="computeQuote()">
+                      <input type="number" class="form-control" required id="length" name="length" onkeyup="computeWeight()">
                     </div>
   
                     <div class="form-cell">
                       <label for="width">Width  (cm):</label>
-                      <input type="number" class="form-control" required id="width" name="width" min="1" max="100" onkeyup="computeQuote()">
+                      <input type="number" class="form-control" required id="width" name="width"  onkeyup="computeWeight()">
                     </div>
   
                     <div class="form-cell">
                       <label for="height">Height  (cm):</label>
-                      <input type="number" class="form-control" required id="height" name="height" min="1" max="100" onkeyup="computeQuote()">
+                      <input type="number" class="form-control" required id="height" name="height"  onkeyup="computeWeight()">
                     </div>
   
                     <div class="form-cell">
                       <label for="weight">Weight (kg):</label>
-                      <input type="number" class="form-control" required id="weight" name="weight" min="1" max="100" onkeyup="computeQuote()">
+                      <input type="number" class="form-control" required id="weight" name="weight" onkeyup="computeWeight()">
                     </div>
   
                   </div>
                   
                   
-                  
+                  <hr>
+                  <h4>Chargeable Weight</h4>
                   <div class="form-group2">
-                    <label for="quoteprice">Your Quotation</label>
-                    <br><span><b>USD <input type="text" style="display: inline;border:none;" id="quoteprice" name="quoteprice" ></b> </span>
+                    <div class="form-cell">
+                      <br><span><b> <input type="text" style="display: inline;border:none;" id="chargeableWeight" name="chargeableWeight" ></b> kg</span>
+                    </div>
                     
                   </div>
   
@@ -157,38 +191,52 @@
                   
       
                   <script>
-                    function computeQuote() {
-                      var quoteprice = document.getElementById("quoteprice");
-                      var l = document.getElementById("length").value;
-                      var w = document.getElementById("width").value;
-                      var h = document.getElementById("height").value;
+                    function computeWeight() {
+                      var chargeableWeight = document.getElementById("chargeableWeight");
+                      var l = parseFloat(document.getElementById("length").value);
+                      var w = parseFloat(document.getElementById("width").value);
+                      var h = parseFloat(document.getElementById("height").value);
+                      var noOfBoxes = parseFloat(document.getElementById("noOfBoxes").value);
                       var cbm;
-                      var kg = document.getElementById("kg");
-                      var shippingmethod = document.getElementById("shippingmethod").value;
-  
-                      if(l!="" && w!="" && h!=""){
+                      var shippingMethod = document.getElementById("shippingMethod").value;
+                      var withPallet = document.getElementById("withPallet").value;
+
+                      if(l!="" && w!="" && h!="" && noOfBoxes!=""){
                         
-                        if(shippingmethod === "Air"){
-                        cbm = (l*w*h)/4500;
-                        quoteprice.value=cbm *100;
+                        if(shippingMethod === "Air Freight"){
+                          if(withPallet === "Yes"){
+                            cbm = ((l*w*h)/4500) * noOfBoxes;
+                            chargeableWeight.value=cbm + (20*noOfBoxes);
+                          }
+                          else{
+                            cbm = ((l*w*h)/4500) * noOfBoxes;
+                            chargeableWeight.value=cbm;
+                          }
+                          
                         }
                         else{
-                          cbm = (l*w*h)/3500;
-                          quoteprice.value=cbm * 50;
+                          if(withPallet === "Yes"){
+                            cbm = ((l*w*h)/3500) * noOfBoxes;
+                            chargeableWeight.value=cbm + (20*noOfBoxes);
+                          }
+                          else{
+                            cbm = ((l*w*h)/4500) * noOfBoxes;
+                            chargeableWeight.value=cbm;
+                          }
                         }
                       }
                       else{
-                        quoteprice.value=0;
+                        chargeableWeight.value=0;
                       }
                       
                     }
-  
+                    
+                   
                     
   
                   </script>
                   
-                    <button type="submit" class="btn btn-save"  formaction="/save-quote">Save to Drafts</button>
-                    <button type="submit" class="btn btn-primary">Accept Quote</button>
+                    <button type="submit" class="btn btn-primary" >Generate Quote</button>
                   
                   
                 </form>
