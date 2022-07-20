@@ -194,7 +194,8 @@ const quoteSchema = new Schema({
         default:"Drafted"
     },
     status:{
-        type:String
+        type:String,
+        default:'processing'
     }
 
 }, {timestamps:true})

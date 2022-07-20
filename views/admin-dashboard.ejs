@@ -17,14 +17,408 @@
       <div class="row">
         <div class="column-1" >
             <div class="vertical-menu">
-              <a href="/accepted-quotes-admin" class="active">Accepted Quotes Admin</a>
-              <a href="/accepted-quotes">Freight Charges</a>
-              <a href="include/custom-quote-requests.ejs">Custom Quote Requests</a>
+              <div class="vertical-menu">
+                <a href="/admin-dashboard"  class="active">Admin Dashboard</a>
+                <a href="/accepted-quotes-admin">Accepted Quotes</a>
+                <a href="/freight-charges">Freight Charges</a>
+                <a href="/custom-quote-requests">Custom Quote Requests</a>
+              </div>
             </div>
         </div>
         <div class="column-2" >
-          <h2>Admin Dashboard</h2>
           
+          <div class="card">
+            <div class="card-body">
+              
+              
+              <br>
+              <form action="add-charge" method="POST" novalidate>
+                <div class="form-group2">
+                  <div class="form-cell">
+                    <label for="origin">Supplier</label>
+                    <input  type="text" class="form-control"  id="origin" name="origin">
+                  </div>
+
+                  <div class="form-cell">
+                    <label for="originCountry">Origin Country</label>
+                    <select   class="form-control" name="originCountry" id="originCountry">
+                      <option value="USA">USA</option>
+                      <option value="China">China</option>
+                  </select>
+                  </div>
+
+                  <div class="form-cell">
+                    <label for="shippingMethod" >Shipping Method:</label>
+                    <select   class="form-control" name="shippingMethod" id="shippingMethod" onchange="disableFields()" onfocus="this.selectedIndex = -1;">
+                        <option value="Sea Freight">Sea Freight</option>
+                        <option value="Air Freight">Air Freight</option>
+                    </select>
+                  </div>
+
+                  
+
+                  <div class="form-cell ">
+                    <label for="loadingPort">Loading Port / Airport</label>
+                    <input  type="text" class="form-control"  id="loadingPort"  name="loadingPort">
+                  </div>
+
+                  <div class="form-cell">
+                    <label for="shippingspeed" >Shipping Speed:</label>
+                    <select   class="form-control" name="shippingspeed" id="shippingspeed">
+                        <option value="Transhipment">Transhipment</option>
+                        <option value="Direct">Direct</option>
+                        <option value="Express">Express</option>
+                    </select>
+                  </div>
+
+                  <div class="form-cell ">
+                    <label for="containerSize" >Container Size:</label>
+                      <select   class="form-control seaFreight" name="containerSize" id="containerSize">
+                          <option value="40' FCL GP">20' FCL GP</option>
+                          <option value="20' FCL GP">40' FCL GP</option>
+                      </select>
+                  </div>
+                </div>
+
+                <hr>
+                <h4>Origin and Freight Charges (USD)</h4>
+                  <br>
+                <div class="form-group2">
+                  
+                  <div class="form-cell" >
+                    <label for="originCharges">Origin Charges:</label>
+                    <input type="number" class="form-control seaFreight"  id="originCharges" name="originCharges" onkeyup="computeoriginCharges()">
+                  </div>
+
+                  <div class="form-cell" >
+                    <label for="airFreightRate" >Air Freight Rate per Kilogram (Includes Inland Pick, Airline Handling & Freight):</label>
+                    <input type="number" class="form-control airFreight"  id="airFreightRate" name="airFreightRate" >
+                  </div>
+
+                  <div class="form-cell" >
+                    <label for="documentationFee" >Documentation Fees:</label>
+                    <input type="number" class="form-control airFreight"  id="documentationFee" name="documentationFee" onkeyup="computeoriginCharges()">
+                  </div>
+
+                  <div class="form-cell">
+                    <label for="cartageFromOrigin" >Cartage from Origin:</label>
+                    <input type="number" class="form-control airFreight"  id="cartageFromOrigin" name="cartageFromOrigin" onkeyup="computeoriginCharges()">
+                  </div>
+                </div>
+                
+                <div class="form-group2">
+                  
+                  <div class="form-cell" >
+                    <label for="portToPortCharges" >Port-to-Port Charges Fees:</label>
+                    <input type="number" class="form-control seaFreight"  id="portToPortCharges" name="portToPortCharges" onkeyup="computeoriginCharges()">
+                  </div>
+
+                  <div class="form-cell">
+                    <label for="handlingFees">AES Filng and Handling Fees:</label>
+                    <input type="number" class="form-control"  id="handlingFees" name="handlingFees" onkeyup="computeoriginCharges()">
+                  </div>
+
+                  <div class="form-cell" >
+                    <label for="congestionFees">Congestion Fee (due to COVID-19):</label>
+                    <input type="number" class="form-control seaFreight"  id="congestionFees" name="congestionFees" onkeyup="computeoriginCharges()">
+                  </div>
+
+                </div>
+
+                <div class="form-group2">
+                  
+                  <div class="form-cell" >
+                    <label for="additionalCharges">Additional Pickup Charges + ISPS Fee:</label>
+                    <input type="number" class="form-control seaFreight" required id="additionalCharges" name="additionalCharges" onkeyup="computeoriginCharges()">
+                  </div>
+
+                  <div class="form-cell">
+                    <label for="exchangeRate">USD to AUD Exchange Rate:</label>
+                    <input type="number" class="form-control"  id="exchangeRate" name="exchangeRate" onkeyup="computeoriginCharges()">
+                  </div>
+
+                  <div class="form-cell">
+                    <label for="totalOriginCharges">Total Origin Charges (AUD):</label>
+                    <input type="number" class="form-control"  id="totalOriginCharges" name="totalOriginCharges">
+                  </div>
+                  
+                </div>
+
+                
+                
+                <hr>
+                <h4>Local Port Charges (AUD)</h4>
+                  <br>
+                <div class="form-group2" >
+                  
+                  <div class="form-cell">
+                    <label for="terminalHandlingFee" id="terminalHandlingFeeLabel">Terminal Handling Fees:</label>
+                    <input type="number" class="form-control seaFreight"  id="terminalHandlingFee" name="terminalHandlingFee" onkeyup="computelocalPortCharges()">
+                  </div>
+
+                  <div class="form-cell">
+                    <label for="DOFee">Delivery Order Fee:</label>
+                    <input type="number" class="form-control seaFreight"  id="DOFee" name="DOFee" onkeyup="computelocalPortCharges()">
+                  </div>
+
+                  <div class="form-cell">
+                    <label for="shipdocsFee">Shipping Line Documentation Fee:</label>
+                    <input type="number" class="form-control seaFreight"  id="shipdocsFee" name="shipdocsFee" onkeyup="computelocalPortCharges()">
+                  </div>
+                </div>
+                <div class="form-group2" >
+                  <div class="form-cell">
+                    <label for="SeaCargoAutFee">Sea Cargo Automation:</label>
+                    <input type="number" class="form-control seaFreight"  id="SeaCargoAutFee" name="SeaCargoAutFee" onkeyup="computelocalPortCharges()">
+                  </div>
+                  
+                  <div class="form-cell">
+                    <label for="CMRFee">CMR Fee:</label>
+                    <input type="number" class="form-control seaFreight"  id="CMRFee" name="CMRFee" onkeyup="computelocalPortCharges()">
+                  </div>
+
+                  <div class="form-cell">
+                    <label for="localPortCharges">CMR Fee:</label>
+                    <input type="number" class="form-control seaFreight"  id="localPortCharges" name="localPortCharges" >
+                  </div>
+                 
+
+                </div>
+                
+                <hr>
+                <h4>Local Transport/Delivery Charges (AUD)</h4>
+                <br>
+                <div class="form-group2">
+                  
+                  <div class="form-cell">
+                    <label for="ITF">Import Terminal Fee (ITF):</label>
+                    <input type="number" class="form-control airFreight"  id="ITF" name="ITF" onkeyup="computeTransportCharges()">
+                  </div>
+
+                  <div class="form-cell">
+                    <label for="ADF">Airline Document Fee:</label>
+                    <input type="number" class="form-control airFreight"  id="ADF" name="ADF" onkeyup="computeTransportCharges()">
+                  </div>
+
+                  <div class="form-cell">
+                    <label for="AHF">Airline Handling Fee:</label>
+                    <input type="number" class="form-control airFreight"  id="AHF" name="AHF" onkeyup="computeTransportCharges()">
+                  </div>
+
+                  <div class="form-cell">
+                    <label for="ACA">Air Cargo Automation:</label>
+                    <input type="number" class="form-control airFreight"  id="ACA" name="ACA" onkeyup="computeTransportCharges()">
+                  </div>
+
+                </div>
+
+                <div class="form-group2">
+
+                  <div class="form-cell">
+                    <label for="cargoReportingFee">Cargo Reporting Fee:</label>
+                    <input type="number" class="form-control airFreight"  id="cargoReportingFee" name="cargoReportingFee" onkeyup="computeTransportCharges()">
+                  </div>
+
+                  <div class="form-cell">
+                    <label for="postage">Postage and Petties:</label>
+                    <input type="number" class="form-control airFreight"  id="postage" name="postage" onkeyup="computeTransportCharges()">
+                  </div>
+
+                  <div class="form-cell">
+                    <label for="base">Base:</label>
+                    <input type="number" class="form-control airFreight"  id="base" name="base" onkeyup="computeTransportCharges()" >
+                  </div>
+
+                  <div class="form-cell">
+                    <label for="cartageFee">Cartage to Destination:</label>
+                    <input type="number" class="form-control"  id="cartageFee" name="cartageFee" onkeyup="computeTransportCharges()">
+                  </div>
+
+                </div>
+                
+                <div class="form-group2">
+
+                  <div class="form-cell">
+                    <label for="portInfraFee">Port Infrastructure Fee:</label>
+                    <input type="number" class="form-control seaFreight"  id="portInfraFee" name="portInfraFee" onkeyup="computeTransportCharges()">
+                  </div>
+
+                  <div class="form-cell">
+                    <label for="CORFee">Chain of Responsibilty:</label>
+                    <input type="number" class="form-control seaFreight"  id="CORFee" name="CORFee" onkeyup="computeTransportCharges()">
+                  </div>
+
+                  <div class="form-cell">
+                    <label for="wharfSlotFee">Wharf Slot Fees:</label>
+                    <input type="number" class="form-control seaFreight"  id="wharfSlotFee" name="wharfSlotFee" onkeyup="computeTransportCharges()">
+                  </div>
+
+                  <div class="form-cell">
+                    <label for="fuelSurcharge">Cartage Fuel Surcharge:</label>
+                    <input type="number" class="form-control"  id="fuelSurcharge" name="fuelSurcharge" onkeyup="computeTransportCharges()">
+                  </div>
+                </div>
+
+                <div class="form-group2">
+                  <div class="form-cell">
+                    <label for="tollFee">Toll Fees:</label>
+                    <input type="number" class="form-control"  id="tollFee" name="tollFee" onkeyup="computeTransportCharges()">
+                  </div>
+
+                  <div class="form-cell seaFreight">
+                    <label for="dehireFee">De-Hire/ Empty Fee:</label>
+                    <input type="number" class="form-control"  id="dehireFee" name="dehireFee" onkeyup="computeTransportCharges()">
+                  </div>
+
+                  <div class="form-cell">
+                    <label for="localTransportCharges">Total Local Transport Charges:</label>
+                    <input type="number" class="form-control"  id="localTransportCharges" name="localTransportCharges" >
+                  </div>
+                </div>
+                
+
+              <button type="submit" class="btn btn-primary">Add Freight Charge</button>
+                
+                
+              </form>
+        </div>
+
+        <script>
+
+          function disableFields(){
+            var shippingMethod = document.getElementById("shippingMethod").value;
+            var airFreight = document.getElementsByClassName('airFreight');
+            var seaFreight = document.getElementsByClassName('seaFreight');
+            if(shippingMethod === "Sea Freight"){
+             
+              for (var i = 0; i < airFreight.length; i ++) {
+                  airFreight[i].readOnly = true;
+                  airFreight[i].disabled = true;
+              }
+              for (var i = 0; i < seaFreight.length; i ++) {
+                  seaFreight[i].readOnly = false;
+                  seaFreight[i].disabled = false;
+              }
+            }
+            else{
+              for (var i = 0; i < seaFreight.length; i ++) {
+                seaFreight[i].readOnly = true;
+                  seaFreight[i].disabled = true;
+              }
+              for (var i = 0; i < airFreight.length; i ++) {
+                airFreight[i].readOnly = false;
+                  airFreight[i].disabled = false;
+              }
+            }
+          }
+
+          function computeoriginCharges() {
+            let totalOriginCharges = document.getElementById("totalOriginCharges");
+
+            //Sea Freight
+            let originCharges= parseFloat(document.getElementById("originCharges").value);
+            let portToPortCharges = parseFloat(document.getElementById("portToPortCharges").value);
+            let congestionFees= parseFloat(document.getElementById("congestionFees").value);
+            let additionalCharges = parseFloat(document.getElementById("additionalCharges").value);
+            let shippingMethod = document.getElementById("shippingMethod").value;
+
+            //Air Freight
+            let documentationFee = parseFloat(document.getElementById("documentationFee").value);
+            let cartageFromOrigin = parseFloat(document.getElementById("cartageFromOrigin").value);
+
+            //Both
+            let handlingFees= parseFloat(document.getElementById("handlingFees").value);
+            let exchangeRate = parseFloat(document.getElementById("exchangeRate").value);
+            
+            totalOriginCharges.value = 0;
+            if(shippingMethod === "Sea Freight"){
+              if(portToPortCharges!="" && originCharges!="" && handlingFees!="" && congestionFees!="" && additionalCharges!="" && exchangeRate!=""){
+                let sum = originCharges + portToPortCharges + handlingFees + congestionFees + additionalCharges;
+                console.log(sum);
+                let subtotal = parseFloat(sum) * exchangeRate;
+                totalOriginCharges.value = subtotal;
+              }
+              else{
+              totalOriginCharges.value = 0;
+              }
+            }
+            else{
+              if(documentationFee!="" && cartageFromOrigin!="" && handlingFees!="" && exchangeRate!=""){
+                let sum = documentationFee + handlingFees;
+                console.log(sum);
+                let subtotal = parseFloat(sum) * exchangeRate;
+                totalOriginCharges.value = subtotal;
+              }
+              else{
+              totalOriginCharges.value = 0;
+              }
+            }
+            
+          }
+          
+          
+          function computelocalPortCharges() {
+            let localPortCharges = document.getElementById("localPortCharges");
+            let terminalHandlingFee = document.getElementById("terminalHandlingFee").value;
+            let shipdocsFee = document.getElementById("shipdocsFee").value;
+            let DOFee = document.getElementById("DOFee").value;
+            let SeaCargoAutFee = document.getElementById("SeaCargoAutFee").value;
+            let CMRFee = document.getElementById("CMRFee").value;
+
+            if(terminalHandlingFee!="" && shipdocsFee!="" && DOFee!="" && SeaCargoAutFee!="" && CMRFee!=""){
+              localPortCharges.value = +terminalHandlingFee + +shipdocsFee + +DOFee + +SeaCargoAutFee + +CMRFee;
+              console.log(localPortCharges.value);
+            }
+            else{
+              localPortCharges.value = 0;
+            }
+          }
+
+          function computeTransportCharges() {
+            let localTransportCharges = document.getElementById("localTransportCharges");
+
+            //Sea Freight
+            
+            let portInfraFee = parseFloat(document.getElementById("portInfraFee").value);
+            let wharfSlotFee = parseFloat(document.getElementById("wharfSlotFee").value);
+            let CORFee= parseFloat(document.getElementById("CORFee").value);
+            let dehireFee= parseFloat(document.getElementById("dehireFee").value);
+
+            //Air Freight
+            let ADF= parseFloat(document.getElementById("ADF").value);
+            let ACA= parseFloat(document.getElementById("ACA").value);
+            let cargoReportingFee= parseFloat(document.getElementById("cargoReportingFee").value);
+            let postage= parseFloat(document.getElementById("postage").value);
+            let base= parseFloat(document.getElementById("base").value);
+
+
+            //both
+            let tollFee = parseFloat(document.getElementById("tollFee").value);
+            let cartageFee= parseFloat(document.getElementById("cartageFee").value);
+            let fuelSurcharge = parseFloat(document.getElementById("fuelSurcharge").value);
+            let shippingMethod = document.getElementById("shippingMethod").value;
+
+            if(shippingMethod === "Sea Freight"){
+              console.log(shippingMethod);console.log(cartageFee);
+              localTransportCharges.value = cartageFee + portInfraFee + wharfSlotFee + fuelSurcharge + CORFee + tollFee + dehireFee;
+              console.log(localTransportCharges.value);
+              
+            }
+            else if (shippingMethod === "Air Freight"){
+                localTransportCharges.value = fuelSurcharge + tollFee + ADF + ACA + cargoReportingFee + postage + base;
+                console.log(localTransportCharges.value);
+              
+            }
+            else{
+              localTransportCharges.value = 0;
+            }
+          }
+
+          
+
+        </script>
+        
+      </div>
         </div>
       </div>
     </div>

@@ -17,14 +17,14 @@
       <div class="row">
         <div class="column-1" >
           <div class="vertical-menu">
-            <a href="/admin-dashboard"  >Admin Dashboard</a>
-            <a href="/accepted-quotes-admin" class="active">Accepted Quotes</a>
+            <a href="/admin-dashboard" >Admin Dashboard</a>
+            <a href="/accepted-quotes-admin">Accepted Quotes</a>
             <a href="/freight-charges">Freight Charges</a>
-            <a href="/custom-quote-requests">Custom Quote Requests</a>
+            <a href="/custom-quote-requests" class="active">Custom Quote Requests</a>
           </div>
         </div>
         <div class="column-2" >
-          <h2>Accepted Quotes</h2>
+          <h2>My Quote Requests</h2>
             <% if (messages.success) { %>
                 <p class="alert alert-success mt-4"><%- messages.success %></p>
             <% } %>  
@@ -38,8 +38,7 @@
                 <th scope="col">Incoterms</th>
                 <th scope="col">Shipping Speed</th>
                 <th scope="col">Quote Price</th>
-                <th scope="col">Shipment Status</th>
-                <th scope="col">Update</th>
+                <th scope="col">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -51,21 +50,22 @@
                 <td><%= data[i].createdAt%></td>
                 <td><%= data[i].name%></td>
                 <td><%= data[i].incoterms%></td>
-                <td><%= data[i].shippingSpeed%></td>
+                <td><%= data[i].shippingspeed%></td>
                 <td><%= data[i].quoteprice%></td>
-                <td><%= data[i].status%></td>
                 <td>
                   <a href="/update-quote?id=<%= data[i]._id%>" class="btn border-shadow update">
                     <span><i class="fas fa-pencil-alt"></i></span>
                   </a>
-                  
+                  <a href="/delete-quote" class="btn border-shadow delete">
+                    <span><i class="fas fa-times"></i></span>
+                  </a>
                 </td>
               </tr>
               <% }
                        
                }else{ %>
                    <tr>
-                      <td colspan="7">No quotes to show</td>
+                      <td colspan="6">No quotes</td>
                    </tr>
                 <% } %>    
               

@@ -16,15 +16,17 @@
     <div class="main-content">
       <div class="row">
         <div class="column-1" >
+          <div class="vertical-menu">
             <div class="vertical-menu">
-              <a href="/quote-portal" >Quote Calculator</a>
-              <a href="/accepted-quotes">Accepted Quotes</a>
-              <a href="/drafted-quotes" >Draft Quotes</a>
-              <a href="/my-quote-requests" class="active">Custom Quote Requests</a>
+              <a href="/admin-dashboard"  >Admin Dashboard</a>
+              <a href="/accepted-quotes-admin">Accepted Quotes</a>
+              <a href="/freight-charges" class="active">Freight Charges</a>
+              <a href="/custom-quote-requests">Custom Quote Requests</a>
             </div>
+          </div>
         </div>
         <div class="column-2" >
-          <h2>My Quote Requests</h2>
+          <h2>Freight Charges</h2>
             <% if (messages.success) { %>
                 <p class="alert alert-success mt-4"><%- messages.success %></p>
             <% } %>  
@@ -32,12 +34,12 @@
               <table class="table">
             <thead class="thead-dark">
               <tr>
-                <th scope="col">#</th>
-                <th scope="col">Date Created</th>
-                <th scope="col">Name</th>
-                <th scope="col">Incoterms</th>
+                <th scope="col">Supplier</th>
+                <th scope="col">Loading Port</th>
+                <th scope="col">Origin Country</th>
+                <th scope="col">Shipping Method</th>
                 <th scope="col">Shipping Speed</th>
-                <th scope="col">Quote Price</th>
+                <th scope="col">Container Size</th>
                 <th scope="col">Actions</th>
               </tr>
             </thead>
@@ -46,19 +48,17 @@
              
               for(var i = 0; i< data.length; i++) {%>  
               <tr>
-                <th scope="row"><%= (i+1) %></th>
-                <td><%= data[i].createdAt%></td>
-                <td><%= data[i].name%></td>
-                <td><%= data[i].incoterms%></td>
-                <td><%= data[i].shippingspeed%></td>
-                <td><%= data[i].quoteprice%></td>
+                <td><%= data[i].origin%></td>
+                <td><%= data[i].loadingPort%></td>
+                <td><%= data[i].originCountry%></td>
+                <td><%= data[i].shippingMethod%></td>
+                <td><%= data[i].shippingSpeed%></td>
+                <td><%= data[i].containerSize%></td>
                 <td>
                   <a href="/update-quote?id=<%= data[i]._id%>" class="btn border-shadow update">
                     <span><i class="fas fa-pencil-alt"></i></span>
                   </a>
-                  <a href="/delete-quote" class="btn border-shadow delete">
-                    <span><i class="fas fa-times"></i></span>
-                  </a>
+                  
                 </td>
               </tr>
               <% }

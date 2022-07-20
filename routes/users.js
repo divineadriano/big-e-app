@@ -42,15 +42,7 @@ router.get('/request-a-quote', function(req, res, next) {
   }
 });
 
-router.get('/add-freight-charge', function(req, res, next) {
-  if(req.session.user){
-    res.render('add-freight-charge', { title: 'Add Freight Charge' });
-  }
-  else{
-    res.redirect('/login');
-  }
-  
-});
+
 
 router.get('/quote-portal', function(req, res, next) {
   if(req.session.user){
@@ -186,6 +178,32 @@ router.get('/accepted-quotes', function(req, res, next) {
 
 });
 
+router.get('/accepted-quotes-admin', function(req, res, next) {
+    
+  const query = { "tag": "Accepted" };
+
+  quoteModel.find( query, (err, docs) => {
+      if (!err) {
+        if(req.session.user){
+
+          if(req.session.user[0].userRole === "Admin"){
+            res.render('accepted-quotes-admin', {data: docs});
+          }
+          else{
+            res.redirect('/login');
+          }
+          
+        }
+        else{
+          res.redirect('/login');
+        }  
+      } else {
+          console.log('Failed to retrieve the Course List: ' + err);
+      }
+  });
+
+});
+
 /* Display Drafted Quotes */
 router.get('/drafted-quotes', function(req, res, next) {
     
@@ -202,6 +220,25 @@ router.get('/drafted-quotes', function(req, res, next) {
                    
       } else {
           console.log('Failed to retrieve the Course List: ' + err);
+      }
+  });
+
+});
+
+router.get('/freight-charges', function(req, res, next) {
+    
+  freightChargeModel.find((err, docs) => {
+      if (!err) {
+        console.log(docs);
+        if(req.session.user){
+          res.render('freight-charges', {data: docs});
+        }
+        else{
+          res.redirect('/login');
+        }  
+                   
+      } else {
+          console.log('Failed to retrieve freight charges list: ' + err);
       }
   });
 
@@ -244,6 +281,32 @@ router.get('/my-quote-requests', function(req, res, next) {
 
 });
 
+router.get('/custom-quote-requests', function(req, res, next) {
+    
+  const query = { "tag": "Requested" };
+
+  quoteModel.find( query, (err, docs) => {
+      if (!err) {
+        if(req.session.user){
+
+          if(req.session.user[0].userRole === "Admin"){
+            res.render('custom-quote-requests', {data: docs});
+          }
+          else{
+            res.redirect('/login');
+          }
+          
+        }
+        else{
+          res.redirect('/login');
+        }  
+      } else {
+          console.log('Failed to retrieve the Course List: ' + err);
+      }
+  });
+
+});
+
 
 
 
@@ -269,18 +332,22 @@ router.post('/generate-quote', function(req, res, next) {
         var chargeableWeight = parseFloat(req.body.chargeableWeight);
         var totalOriginCharges = parseFloat(docs[0].totalOriginCharges);
         var exchangeRate = parseFloat(docs[0].exchangeRate);
-        console.log(req.body.pickupAddress);
-        console.log(req.body.name);
-        console.log(req.body.deliveryAddress);
+
         if(docs[0].shippingMethod === "Air Freight"){
           ITF = ITF * chargeableWeight
           AHF = AHF * chargeableWeight
           cartageFee = cartageFee * chargeableWeight
           localTransportCharges = localTransportCharges + ITF + AHF + cartageFee;
           totalOriginCharges = (totalOriginCharges + (airFreightRate*chargeableWeight) + (cartageFromOrigin*chargeableWeight))*exchangeRate;
-          quoteprice = totalOriginCharges + ((ITF*chargeableWeight) + (AHF*chargeableWeight) + (cartageFee*chargeableWeight));
-          
 
+          if(req.body.incoterms === "EXW"){
+            quoteprice = totalOriginCharges + ((ITF*chargeableWeight) + (AHF*chargeableWeight) + (cartageFee*chargeableWeight)) + 2000;
+            console.log(quoteprice);
+          }
+          else{
+            quoteprice = totalOriginCharges + ((ITF*chargeableWeight) + (AHF*chargeableWeight) + (cartageFee*chargeableWeight));
+            console.log(quoteprice);
+          }
           result.push({
             name:req.body.name,
             pickupcountry:req.body.pickupcountry,
@@ -291,7 +358,7 @@ router.post('/generate-quote', function(req, res, next) {
             shippingSpeed: req.body.shippingSpeed,
             shippingMethod: req.body.shippingMethod,
             withPallet: req.body.withPallet,
-            containerSize: req.body.containerSize,
+            containerSize: 'not applicable',
             length: req.body.length,
             width: req.body.width,
             height: req.body.height,
@@ -299,7 +366,7 @@ router.post('/generate-quote', function(req, res, next) {
             noOfBoxes: req.body.noOfBoxes,
             chargeableWeight: req.body.chargeableWeight,
             totalOriginCharges: totalOriginCharges,
-            localPortCharges: '',
+            localPortCharges: '0',
             localTransportCharges: localTransportCharges,
             quoteprice: quoteprice
           });
@@ -549,7 +616,7 @@ router.post('/add-charge', function(req, res, next) {
         if (!err){
             req.flash('success', 'Freight charge added successfully!');
             console.log('Freight Charge added successfully!');
-            res.redirect('/admin-dashboard');}
+            res.redirect('/freight-charges');}
         else{
             console.log('Error during record insertion : ' + err);}
   });
