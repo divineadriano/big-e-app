@@ -13,12 +13,12 @@
 
     <div class="main-content">
         <div class="column-1" >
-            <div class="vertical-menu">
-                <a href="/quote-portal" >Quote Calculator</a>
-                <a href="/accepted-quotes">Accepted Quotes</a>
-                <a href="/drafted-quotes" class="active">Draft Quotes</a>
-                <a href="/my-quote-requests">Custom Quote Requests</a>
-            </div>
+          <div class="vertical-menu">
+            <a href="/admin-dashboard"  >Admin Dashboard</a>
+            <a href="/accepted-quotes-admin" class="active">Accepted Quotes</a>
+            <a href="/freight-charges">Freight Charges</a>
+            <a href="/custom-quote-requests">Custom Quote Requests</a>
+          </div>
         </div>
         <div class="column-2" >
     
@@ -182,10 +182,19 @@
                       <div class="form-cell">
                         <br><span><b> USD <input type="text" style="display: inline;border:none;" id="quoteprice" name="quoteprice" value="<%= quote.quoteprice%>"></b></span>
                       </div>
+
+              
+                    </div>
+
+                    <h4>Update Quote Status</h4>
+                    <div class="form-group2">
+                      <div class="form-cell">
+                        <label for="status">Status</label>
+                        <input type="text" class="form-control"  id="status" name="status" value="<%= quote.status%>" >
+                      </div>
                       
                     </div>
-                    <button type="submit" class="btn btn-save" formaction="/drafted-quotes">Back</button>
-                    <button type="submit" class="btn btn-primary"  formaction="/accept-quote" >Accept Quote</button>
+                    <button type="submit" class="btn btn-save" formaction="/update-status">Save Quote</button>
                     
                     
                   </form>

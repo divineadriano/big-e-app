@@ -213,11 +213,10 @@ router.get('/drafted-quotes', function(req, res, next) {
 
         if(req.session.user){
           res.render('drafted-quotes', {data: docs});
-        }
+        }   
         else{
           res.redirect('/login');
-        }  
-                   
+        }   
       } else {
           console.log('Failed to retrieve the Course List: ' + err);
       }
@@ -229,7 +228,6 @@ router.get('/freight-charges', function(req, res, next) {
     
   freightChargeModel.find((err, docs) => {
       if (!err) {
-        console.log(docs);
         if(req.session.user){
           res.render('freight-charges', {data: docs});
         }
@@ -311,11 +309,19 @@ router.get('/custom-quote-requests', function(req, res, next) {
 
 
 router.get('/api/quotes', controller.find);
+
+router.get('/api/freight', controller.findfreight);
 router.get('/update-quote', services.update_quote);
+router.get('/update-quote-admin', services.update_quote_admin);
+router.get('/update-freight', services.update_freight);
 router.put('/api/quote/:id', controller.update);
 router.delete('/api/quote/:id', controller.delete);
 
 /* Generate Quote */
+
+
+
+
 router.post('/generate-quote', function(req, res, next) {
   
   var result = [];
@@ -470,20 +476,27 @@ router.post('/save-quote', function(req, res, next) {
     
   
   var quoteDetails = new quoteModel({
-    name: req.body.name,
-    pickupcountry: req.body.pickupcountry,
-    pickupsuburb: req.body.pickupsuburb,
-    destination: req.body.destination,
+    name:req.body.name,
+    pickupcountry:req.body.pickupcountry,
+    loadingPort: req.body.loadingPort,
     incoterms: req.body.incoterms,
+    pickupAddress: req.body.pickupAddress,
+    deliveryAddress: req.body.deliveryAddress,
     shippingSpeed: req.body.shippingSpeed,
-    packaging: req.body.packaging,
-    noOfBoxes: req.body.noOfBoxes,
+    shippingMethod: req.body.shippingMethod,
+    withPallet: req.body.withPallet,
+    containerSize: req.body.containerSize,
     length: req.body.length,
     width: req.body.width,
     height: req.body.height,
     weight: req.body.weight,
+    noOfBoxes: req.body.noOfBoxes,
+    chargeableWeight: req.body.chargeableWeight,
+    totalOriginCharges: req.body.totalOriginCharges,
+    localPortCharges: req.body.localPortCharges,
+    localTransportCharges: req.body.localTransportCharges,
     quoteprice: req.body.quoteprice,
-    tag: "Drafted"
+    tag:'Drafted'
   });
    
   quoteDetails .save((err, doc) => {
@@ -499,25 +512,72 @@ router.post('/save-quote', function(req, res, next) {
 });
 
 
+router.post('/update-status', function(req, res, next) {
+    
+  
+  var quoteDetails = new quoteModel({
+    name:req.body.name,
+    pickupcountry:req.body.pickupcountry,
+    loadingPort: req.body.loadingPort,
+    incoterms: req.body.incoterms,
+    pickupAddress: req.body.pickupAddress,
+    deliveryAddress: req.body.deliveryAddress,
+    shippingSpeed: req.body.shippingSpeed,
+    shippingMethod: req.body.shippingMethod,
+    withPallet: req.body.withPallet,
+    containerSize: req.body.containerSize,
+    length: req.body.length,
+    width: req.body.width,
+    height: req.body.height,
+    weight: req.body.weight,
+    noOfBoxes: req.body.noOfBoxes,
+    chargeableWeight: req.body.chargeableWeight,
+    totalOriginCharges: req.body.totalOriginCharges,
+    localPortCharges: req.body.localPortCharges,
+    localTransportCharges: req.body.localTransportCharges,
+    quoteprice: req.body.quoteprice,
+    tag:'Accepted',
+    status: req.body.status
+  });
+   
+  quoteDetails .save((err, doc) => {
+    if (!err){
+      req.flash('success', 'Quote successfully updated!');
+      console.log('Quote successfully updated!');
+      res.redirect('/accepted-quotes-admin');}
+    else{
+      console.log('Error during record insertion : ' + err);}
+  });
+
+  
+});
+
 /* REQUEST Quote*/
 router.post('/request-quote', function(req, res, next) {
     
   
   var quoteDetails = new quoteModel({
-    name: req.body.name,
-    pickupcountry: req.body.pickupcountry,
-    pickupsuburb: req.body.pickupsuburb,
-    destination: req.body.destination,
+    name:req.body.name,
+    pickupcountry:req.body.pickupcountry,
+    loadingPort: req.body.loadingPort,
     incoterms: req.body.incoterms,
+    pickupAddress: req.body.pickupAddress,
+    deliveryAddress: req.body.deliveryAddress,
     shippingSpeed: req.body.shippingSpeed,
-    packaging: req.body.packaging,
-    noOfBoxes: req.body.noOfBoxes,
+    shippingMethod: req.body.shippingMethod,
+    withPallet: req.body.withPallet,
+    containerSize: req.body.containerSize,
     length: req.body.length,
     width: req.body.width,
     height: req.body.height,
     weight: req.body.weight,
-    quoteprice: 0,
-    tag: "Requested"
+    noOfBoxes: req.body.noOfBoxes,
+    chargeableWeight: req.body.chargeableWeight,
+    totalOriginCharges: req.body.totalOriginCharges,
+    localPortCharges: req.body.localPortCharges,
+    localTransportCharges: req.body.localTransportCharges,
+    quoteprice: req.body.quoteprice,
+    tag:'Requested'
   });
    
   quoteDetails .save((err, doc) => {
@@ -577,7 +637,7 @@ router.post('/add-charge', function(req, res, next) {
     originCountry: req.body.originCountry,
     loadingPort: req.body.loadingPort,
     shippingMethod: req.body.shippingMethod,
-    shippingSpeed:req.body.shippingSpeed,
+    shippingSpeed: req.body.shippingSpeed,
     containerSize: req.body.containerSize,
     originCharges: req.body.originCharges,
     portToPortCharges: req.body.portToPortCharges,
@@ -623,4 +683,22 @@ router.post('/add-charge', function(req, res, next) {
 
 });
 
+
+router.post('/update-charge', function(req, res, next) {
+   
+  const id = req.body.id;
+    freightChargeModel.findByIdAndUpdate(id, req.body, { useFindAndModify: false})
+        .then(data => {
+            if(!data){
+                res.status(404).send({ message : `Cannot Update quote with ${id}. Maybe quote not found!`})
+            }else{
+              res.redirect('/freight-charges');
+            }
+        })
+        .catch(err =>{
+            res.status(500).send({ message : "Error Updating quote information"})
+        })
+
+        
+});
 module.exports = router;

@@ -32,51 +32,42 @@
               
               
               <br>
-              <form action="add-charge" method="POST" novalidate>
+              <form method="POST" action="update-charge"  novalidate>
                 <div class="form-group2">
+
+                    <input  type="text" hidden readonly class="form-control"  id="id" name="id" value="<%= freight._id%>">
+                  
+
                   <div class="form-cell">
                     <label for="origin">Supplier</label>
-                    <input  type="text" class="form-control"  id="origin" name="origin">
+                    <input  type="text" readonly class="form-control"  id="origin" name="origin" value="<%= freight.origin%>">
                   </div>
 
                   <div class="form-cell">
                     <label for="originCountry">Origin Country</label>
-                    <select   class="form-control" name="originCountry" id="originCountry">
-                      <option value="USA">USA</option>
-                      <option value="China">China</option>
-                  </select>
+                    <input  type="text" readonly class="form-control"  id="originCountry"  name="originCountry" value="<%= freight.originCountry%>">
                   </div>
 
                   <div class="form-cell">
                     <label for="shippingMethod" >Shipping Method:</label>
-                    <select   class="form-control" name="shippingMethod" id="shippingMethod" onchange="disableFields()" onfocus="this.selectedIndex = -1;">
-                        <option value="Sea Freight">Sea Freight</option>
-                        <option value="Air Freight">Air Freight</option>
-                    </select>
+                    <input  type="text" readonly class="form-control"  id="shippingMethod"  name="shippingMethod" value="<%= freight.shippingMethod%>">
                   </div>
 
                   
 
                   <div class="form-cell ">
                     <label for="loadingPort">Loading Port / Airport</label>
-                    <input  type="text" class="form-control"  id="loadingPort"  name="loadingPort">
+                    <input  type="text" readonly class="form-control"  id="loadingPort"  name="loadingPort">
                   </div>
 
                   <div class="form-cell">
-                    <label for="shippingspeed" >Shipping Speed:</label>
-                    <select   class="form-control" name="shippingspeed" id="shippingspeed">
-                        <option value="Transhipment">Transhipment</option>
-                        <option value="Direct">Direct</option>
-                        <option value="Express">Express</option>
-                    </select>
+                    <label for="shippingSpeed" >Shipping Speed:</label>
+                    <input  type="text" readonly class="form-control"  id="shippingSpeed"  name="shippingSpeed" value="<%= freight.shippingSpeed%>">
                   </div>
 
                   <div class="form-cell ">
                     <label for="containerSize" >Container Size:</label>
-                      <select   class="form-control seaFreight" name="containerSize" id="containerSize">
-                          <option value="40' FCL GP">20' FCL GP</option>
-                          <option value="20' FCL GP">40' FCL GP</option>
-                      </select>
+                      <input  type="text" readonly class="form-control"  id="containerSize"  name="containerSize" value="<%= freight.containerSize%>">
                   </div>
                 </div>
 
@@ -87,22 +78,22 @@
                   
                   <div class="form-cell" >
                     <label for="originCharges">Origin Charges:</label>
-                    <input type="number" class="form-control seaFreight"  id="originCharges" name="originCharges" onkeyup="computeoriginCharges()">
+                    <input type="number" class="form-control seaFreight"  id="originCharges" name="originCharges" value="<%= freight.originCharges%>">
                   </div>
 
                   <div class="form-cell" >
                     <label for="airFreightRate" >Air Freight Rate per Kilogram (Includes Inland Pick, Airline Handling & Freight):</label>
-                    <input type="number" class="form-control airFreight"  id="airFreightRate" name="airFreightRate" >
+                    <input type="number" class="form-control airFreight"  id="airFreightRate" name="airFreightRate" value="<%= freight.airFreightRate%>">
                   </div>
 
                   <div class="form-cell" >
                     <label for="documentationFee" >Documentation Fees:</label>
-                    <input type="number" class="form-control airFreight"  id="documentationFee" name="documentationFee" onkeyup="computeoriginCharges()">
+                    <input type="number" class="form-control airFreight"  id="documentationFee" name="documentationFee" value="<%= freight.documentationFee%>" onkeyup="computeoriginCharges()">
                   </div>
 
                   <div class="form-cell">
                     <label for="cartageFromOrigin" >Cartage from Origin:</label>
-                    <input type="number" class="form-control airFreight"  id="cartageFromOrigin" name="cartageFromOrigin" onkeyup="computeoriginCharges()">
+                    <input type="number" class="form-control airFreight"  id="cartageFromOrigin" name="cartageFromOrigin" value="<%= freight.cartageFromOrigin%>" onkeyup="computeoriginCharges()">
                   </div>
                 </div>
                 
@@ -110,17 +101,17 @@
                   
                   <div class="form-cell" >
                     <label for="portToPortCharges" >Port-to-Port Charges Fees:</label>
-                    <input type="number" class="form-control seaFreight"  id="portToPortCharges" name="portToPortCharges" onkeyup="computeoriginCharges()">
+                    <input type="number" class="form-control seaFreight"  id="portToPortCharges" name="portToPortCharges" value="<%= freight.portToPortCharges%>" onkeyup="computeoriginCharges()">
                   </div>
 
                   <div class="form-cell">
                     <label for="handlingFees">AES Filng and Handling Fees:</label>
-                    <input type="number" class="form-control"  id="handlingFees" name="handlingFees" onkeyup="computeoriginCharges()">
+                    <input type="number" class="form-control"  id="handlingFees" name="handlingFees" value="<%= freight.handlingFees%>" onkeyup="computeoriginCharges()">
                   </div>
 
                   <div class="form-cell" >
                     <label for="congestionFees">Congestion Fee (due to COVID-19):</label>
-                    <input type="number" class="form-control seaFreight"  id="congestionFees" name="congestionFees" onkeyup="computeoriginCharges()">
+                    <input type="number" class="form-control seaFreight"  id="congestionFees" name="congestionFees" value="<%= freight.congestionFees%>" onkeyup="computeoriginCharges()">
                   </div>
 
                 </div>
@@ -129,17 +120,17 @@
                   
                   <div class="form-cell" >
                     <label for="additionalCharges">Additional Pickup Charges + ISPS Fee:</label>
-                    <input type="number" class="form-control seaFreight" required id="additionalCharges" name="additionalCharges" onkeyup="computeoriginCharges()">
+                    <input type="number" class="form-control seaFreight" required id="additionalCharges" name="additionalCharges" value="<%= freight.additionalCharges%>" onkeyup="computeoriginCharges()">
                   </div>
 
                   <div class="form-cell">
                     <label for="exchangeRate">USD to AUD Exchange Rate:</label>
-                    <input type="number" class="form-control"  id="exchangeRate" name="exchangeRate" onkeyup="computeoriginCharges()">
+                    <input type="number" class="form-control"  id="exchangeRate" name="exchangeRate" value="<%= freight.exchangeRate%>" onkeyup="computeoriginCharges()">
                   </div>
 
                   <div class="form-cell">
                     <label for="totalOriginCharges">Total Origin Charges (AUD):</label>
-                    <input type="number" class="form-control"  id="totalOriginCharges" name="totalOriginCharges">
+                    <input type="number" class="form-control"  id="totalOriginCharges"  name="totalOriginCharges">
                   </div>
                   
                 </div>
@@ -152,34 +143,34 @@
                 <div class="form-group2" >
                   
                   <div class="form-cell">
-                    <label for="terminalHandlingFee" id="terminalHandlingFeeLabel">Terminal Handling Fees:</label>
-                    <input type="number" class="form-control seaFreight"  id="terminalHandlingFee" name="terminalHandlingFee" onkeyup="computelocalPortCharges()">
+                    <label for="terminalHandlingFee" id="terminalHandlingFeeLabel" value="<%= freight.containerSize%>">Terminal Handling Fees:</label>
+                    <input type="number" class="form-control seaFreight"  id="terminalHandlingFee" name="terminalHandlingFee" value="<%= freight.terminalHandlingFee%>" onkeyup="computelocalPortCharges()">
                   </div>
 
                   <div class="form-cell">
                     <label for="DOFee">Delivery Order Fee:</label>
-                    <input type="number" class="form-control seaFreight"  id="DOFee" name="DOFee" onkeyup="computelocalPortCharges()">
+                    <input type="number" class="form-control seaFreight"  id="DOFee" name="DOFee" value="<%= freight.DOFee%>" onkeyup="computelocalPortCharges()">
                   </div>
 
                   <div class="form-cell">
                     <label for="shipdocsFee">Shipping Line Documentation Fee:</label>
-                    <input type="number" class="form-control seaFreight"  id="shipdocsFee" name="shipdocsFee" onkeyup="computelocalPortCharges()">
+                    <input type="number" class="form-control seaFreight"  id="shipdocsFee" name="shipdocsFee" value="<%= freight.shipdocsFee%>" onkeyup="computelocalPortCharges()">
                   </div>
                 </div>
                 <div class="form-group2" >
                   <div class="form-cell">
                     <label for="SeaCargoAutFee">Sea Cargo Automation:</label>
-                    <input type="number" class="form-control seaFreight"  id="SeaCargoAutFee" name="SeaCargoAutFee" onkeyup="computelocalPortCharges()">
+                    <input type="number" class="form-control seaFreight"  id="SeaCargoAutFee" name="SeaCargoAutFee" value="<%= freight.SeaCargoAutFee%>" onkeyup="computelocalPortCharges()">
                   </div>
                   
                   <div class="form-cell">
                     <label for="CMRFee">CMR Fee:</label>
-                    <input type="number" class="form-control seaFreight"  id="CMRFee" name="CMRFee" onkeyup="computelocalPortCharges()">
+                    <input type="number" class="form-control seaFreight"  id="CMRFee" name="CMRFee" value="<%= freight.CMRFee%>" onkeyup="computelocalPortCharges()">
                   </div>
 
                   <div class="form-cell">
                     <label for="localPortCharges">Total Local Port Charges:</label>
-                    <input type="number" class="form-control seaFreight"  id="localPortCharges" name="localPortCharges" >
+                    <input type="number" class="form-control seaFreight"  id="localPortCharges"  name="localPortCharges" >
                   </div>
                  
 
@@ -192,22 +183,22 @@
                   
                   <div class="form-cell">
                     <label for="ITF">Import Terminal Fee (ITF):</label>
-                    <input type="number" class="form-control airFreight"  id="ITF" name="ITF" onkeyup="computeTransportCharges()">
+                    <input type="number" class="form-control airFreight"  id="ITF" name="ITF" value="<%= freight.ITF%>" onkeyup="computeTransportCharges()">
                   </div>
 
                   <div class="form-cell">
                     <label for="ADF">Airline Document Fee:</label>
-                    <input type="number" class="form-control airFreight"  id="ADF" name="ADF" onkeyup="computeTransportCharges()">
+                    <input type="number" class="form-control airFreight"  id="ADF" name="ADF" value="<%= freight.ADF%>" onkeyup="computeTransportCharges()">
                   </div>
 
                   <div class="form-cell">
                     <label for="AHF">Airline Handling Fee:</label>
-                    <input type="number" class="form-control airFreight"  id="AHF" name="AHF" onkeyup="computeTransportCharges()">
+                    <input type="number" class="form-control airFreight"  id="AHF" name="AHF" value="<%= freight.AHF%>" onkeyup="computeTransportCharges()">
                   </div>
 
                   <div class="form-cell">
                     <label for="ACA">Air Cargo Automation:</label>
-                    <input type="number" class="form-control airFreight"  id="ACA" name="ACA" onkeyup="computeTransportCharges()">
+                    <input type="number" class="form-control airFreight"  id="ACA" name="ACA" value="<%= freight.ACA%>" onkeyup="computeTransportCharges()">
                   </div>
 
                 </div>
@@ -216,22 +207,22 @@
 
                   <div class="form-cell">
                     <label for="cargoReportingFee">Cargo Reporting Fee:</label>
-                    <input type="number" class="form-control airFreight"  id="cargoReportingFee" name="cargoReportingFee" onkeyup="computeTransportCharges()">
+                    <input type="number" class="form-control airFreight"  id="cargoReportingFee" name="cargoReportingFee" value="<%= freight.cargoReportingFee%>" onkeyup="computeTransportCharges()">
                   </div>
 
                   <div class="form-cell">
                     <label for="postage">Postage and Petties:</label>
-                    <input type="number" class="form-control airFreight"  id="postage" name="postage" onkeyup="computeTransportCharges()">
+                    <input type="number" class="form-control airFreight"  id="postage" name="postage" value="<%= freight.postage%>" onkeyup="computeTransportCharges()">
                   </div>
 
                   <div class="form-cell">
                     <label for="basefee">Base:</label>
-                    <input type="number" class="form-control airFreight"  id="basefee" name="basefee" onkeyup="computeTransportCharges()" >
+                    <input type="number" class="form-control airFreight"  id="basefee" name="basefee" value="<%= freight.basefee%>" onkeyup="computeTransportCharges()" >
                   </div>
 
                   <div class="form-cell">
                     <label for="cartageFee">Cartage to Destination:</label>
-                    <input type="number" class="form-control"  id="cartageFee" name="cartageFee" onkeyup="computeTransportCharges()">
+                    <input type="number" class="form-control"  id="cartageFee" name="cartageFee" value="<%= freight.cartageFee%>" onkeyup="computeTransportCharges()">
                   </div>
 
                 </div>
@@ -240,44 +231,44 @@
 
                   <div class="form-cell">
                     <label for="portInfraFee">Port Infrastructure Fee:</label>
-                    <input type="number" class="form-control seaFreight"  id="portInfraFee" name="portInfraFee" onkeyup="computeTransportCharges()">
+                    <input type="number" class="form-control seaFreight"  id="portInfraFee" name="portInfraFee" value="<%= freight.portInfraFee%>" onkeyup="computeTransportCharges()">
                   </div>
 
                   <div class="form-cell">
                     <label for="CORFee">Chain of Responsibilty:</label>
-                    <input type="number" class="form-control seaFreight"  id="CORFee" name="CORFee" onkeyup="computeTransportCharges()">
+                    <input type="number" class="form-control seaFreight"  id="CORFee" name="CORFee" value="<%= freight.CORFee%>" onkeyup="computeTransportCharges()">
                   </div>
 
                   <div class="form-cell">
                     <label for="wharfSlotFee">Wharf Slot Fees:</label>
-                    <input type="number" class="form-control seaFreight"  id="wharfSlotFee" name="wharfSlotFee" onkeyup="computeTransportCharges()">
+                    <input type="number" class="form-control seaFreight"  id="wharfSlotFee" name="wharfSlotFee" value="<%= freight.wharfSlotFee%>" onkeyup="computeTransportCharges()">
                   </div>
 
                   <div class="form-cell">
                     <label for="fuelSurcharge">Cartage Fuel Surcharge:</label>
-                    <input type="number" class="form-control"  id="fuelSurcharge" name="fuelSurcharge" onkeyup="computeTransportCharges()">
+                    <input type="number" class="form-control"  id="fuelSurcharge" name="fuelSurcharge" value="<%= freight.fuelSurcharge%>" onkeyup="computeTransportCharges()">
                   </div>
                 </div>
 
                 <div class="form-group2">
                   <div class="form-cell">
                     <label for="tollFee">Toll Fees:</label>
-                    <input type="number" class="form-control"  id="tollFee" name="tollFee" onkeyup="computeTransportCharges()">
+                    <input type="number" class="form-control"  id="tollFee" name="tollFee" value="<%= freight.tollFee%>" onkeyup="computeTransportCharges()">
                   </div>
 
                   <div class="form-cell seaFreight">
                     <label for="dehireFee">De-Hire/ Empty Fee:</label>
-                    <input type="number" class="form-control"  id="dehireFee" name="dehireFee" onkeyup="computeTransportCharges()">
+                    <input type="number" class="form-control"  id="dehireFee" name="dehireFee" value="<%= freight.dehireFee%>" onkeyup="computeTransportCharges()">
                   </div>
 
                   <div class="form-cell">
                     <label for="localTransportCharges">Total Local Transport Charges:</label>
-                    <input type="number" class="form-control"  id="localTransportCharges" name="localTransportCharges" >
+                    <input type="number" class="form-control"  id="localTransportCharges"  name="localTransportCharges" >
                   </div>
                 </div>
                 
 
-              <button type="submit" class="btn btn-primary">Add Freight Charge</button>
+              <button type="submit" class="btn btn-primary">Update Freight Charge</button>
                 
                 
               </form>
@@ -293,21 +284,17 @@
              
               for (var i = 0; i < airFreight.length; i ++) {
                   airFreight[i].readOnly = true;
-                  airFreight[i].disabled = true;
               }
               for (var i = 0; i < seaFreight.length; i ++) {
                   seaFreight[i].readOnly = false;
-                  seaFreight[i].disabled = false;
               }
             }
             else{
               for (var i = 0; i < seaFreight.length; i ++) {
                 seaFreight[i].readOnly = true;
-                  seaFreight[i].disabled = true;
               }
               for (var i = 0; i < airFreight.length; i ++) {
                 airFreight[i].readOnly = false;
-                  airFreight[i].disabled = false;
               }
             }
           }
@@ -389,7 +376,7 @@
             let ACA= parseFloat(document.getElementById("ACA").value);
             let cargoReportingFee= parseFloat(document.getElementById("cargoReportingFee").value);
             let postage= parseFloat(document.getElementById("postage").value);
-            let base= parseFloat(document.getElementById("basefee").value);
+            let base= parseFloat(document.getElementById("base").value);
 
 
             //both

@@ -1,4 +1,5 @@
 const quoteModel = require('../models/quote')
+const freightChargeModel = require('../models/freight-charge')
 exports.find = (req, res)=>{
 
     if(req.query.id){
@@ -29,6 +30,36 @@ exports.find = (req, res)=>{
     
 }
 
+
+exports.findfreight = (req, res)=>{
+
+    if(req.query.id){
+        const id = req.query.id;
+        console.log(id);
+        freightChargeModel.findById(id)
+            .then(data =>{
+                if(!data){
+                    res.status(404).send({ message : "Not found freight with id "+ id})
+                }else{
+                    res.send(data)
+                }
+            })
+            .catch(err =>{
+                res.status(500).send({ message: "Error retrieving freight with id " + id})
+            })
+
+    }else{
+        freightChargeModel.find()
+            .then(user => {
+                res.send(user)
+            })
+            .catch(err => {
+                res.status(500).send({ message : err.message || "Error Occurred while retriving user information" })
+            })
+    }
+
+    
+}
 
 // Update a new idetified user by user id
 exports.update = (req, res)=>{
