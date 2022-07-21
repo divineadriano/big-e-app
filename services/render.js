@@ -16,6 +16,7 @@ exports.update_quote = (req, res) =>{
         })
 }
 
+
 exports.update_quote_admin = (req, res) =>{
     axios.get('http://localhost:3000/api/quotes', { params : { id : req.query.id }})
         .then(function(quotedata){

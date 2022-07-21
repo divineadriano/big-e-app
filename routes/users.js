@@ -3,12 +3,10 @@ var router = express.Router();
 var mongoose = require('mongoose');
 var userModel = require('../models/userMod');
 var quoteModel = require('../models/quote');
-var alert = require('alert')
 var nodemailer = require('nodemailer');
 const axios = require('axios');
 const controller = require('../controllers/controller');
 const bcrypt = require('bcryptjs');
-
 const services = require('../services/render');
 const freightChargeModel = require('../models/freight-charge');
 var session = require('express-session')
@@ -90,14 +88,15 @@ router.post('/authenticate', function(req, res, next) {
                   }
                   
                 } else {
-                    res.send('Incorrect Password!');
-                    console.log(cryptErr);
+                    req.flash('error', 'Password is incorrect');
+                    res.redirect('/login');
                 }
                 res.end();
             });
       }
       else {
-          console.log('No user match that email address' + err);
+        req.flash('error', 'No user match the email address.');
+        res.redirect('/login');
       }
   });
   }
@@ -155,6 +154,34 @@ router.post('/add-user', function(req, res, next) {
           else{
               console.log('Error during record insertion : ' + err);}
     });
+
+    var mail = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+      user: 'divinegraceguballa@gmail.com',
+      pass: 'itkantjlwvivbotg'
+        }
+      });
+    
+      var mailOptions = {
+        from: 'bigeimports@gmail.com',
+        to: req.body.email,
+        subject: 'Successfully registered to Big E Imports!',
+        html: "<style>table{text-align:left;border-collapse: collapse;}th{border: 1px solid #2e3690;background:#2e3690;color:white;padding:10px;}td{padding:10px;border: 1px solid #2e3690;}</style>" +
+              "<img src='https://i.ibb.co/X3C8c83/bigeimports-OG-2x.png' alt='Big E Imports' border='0' width='150'></br></br>" +
+              "<h1>Successfully registered!</h1><hr></br>" + "<p>Thank you for signing up to Big E Imports. You can login <a href='http://127.0.0.1:3000/login'>here</a></p><br>" +
+              "<span><b>Email Address: </b>" + req.body.email + "</span></br>" +
+              "<span>Password: </b>"  + req.body.password + "</span></br>"
+      
+      };
+        
+      mail.sendMail(mailOptions, function(error, info){
+        if (error) {
+          console.log(error);
+        } else {
+          console.log('Email sent: ' + info.response);
+        }
+      });
 });
 
 
@@ -341,16 +368,23 @@ router.post('/generate-quote', function(req, res, next) {
           AHF = AHF * chargeableWeight
           cartageFee = cartageFee * chargeableWeight
           localTransportCharges = localTransportCharges + ITF + AHF + cartageFee;
-          totalOriginCharges = (totalOriginCharges + (airFreightRate*chargeableWeight) + (cartageFromOrigin*chargeableWeight))*exchangeRate;
+
 
           if(req.body.incoterms === "EXW"){
-            quoteprice = totalOriginCharges + ((ITF*chargeableWeight) + (AHF*chargeableWeight) + (cartageFee*chargeableWeight)) + 2000;
-            console.log(quoteprice);
+            totalOriginCharges = totalOriginCharges + ((airFreightRate*chargeableWeight) + (cartageFromOrigin*chargeableWeight))*exchangeRate;
           }
           else{
-            quoteprice = totalOriginCharges + ((ITF*chargeableWeight) + (AHF*chargeableWeight) + (cartageFee*chargeableWeight));
-            console.log(quoteprice);
+            totalOriginCharges = totalOriginCharges + ((airFreightRate*chargeableWeight)*exchangeRate);
           }
+
+          totalOriginCharges = totalOriginCharges + ((airFreightRate*chargeableWeight) + (cartageFromOrigin*chargeableWeight))*exchangeRate;
+          
+          quoteprice = totalOriginCharges + localTransportCharges;
+
+          
+          quoteprice = Math.round((quoteprice + Number.EPSILON) * 100) / 100;
+
+          
           result.push({
             name:req.body.name,
             pickupcountry:req.body.pickupcountry,
@@ -440,7 +474,7 @@ router.post('/accept-quote', function(req, res, next) {
     weight: req.body.weight,
     noOfBoxes: req.body.noOfBoxes,
     chargeableWeight: req.body.chargeableWeight,
-    totalOriginCharges: req.body.chargeableWeight,
+    totalOriginCharges: req.body.totalOriginCharges,
     localPortCharges: req.body.localPortCharges,
     localTransportCharges: req.body.localTransportCharges,
     quoteprice: req.body.quoteprice,
@@ -464,12 +498,14 @@ router.post('/accept-quote', function(req, res, next) {
     }
   });
 
+  var recipients = [req.session.user[0].email, 'adrianodivine@gmail.com','divine.adriano@knobin.com'];
   var mailOptions = {
     from: 'bigeimports@gmail.com',
-    to: 'divine.adriano@knobin.com, adrianodivine@gmail.com',
+    to: recipients,
     subject: 'New Shipping Quote Accepted!',
     html: "<style>table{text-align:left;border-collapse: collapse;}th{border: 1px solid #2e3690;background:#2e3690;color:white;padding:10px;}td{padding:10px;border: 1px solid #2e3690;}</style>" +
-          "<h1>New Quote Accepted</h1>" + "<p>Hello Big E Imports, A new quotation has been accepted in your system! Please check details below.</p><br><br>" +
+          "<img src='https://i.ibb.co/X3C8c83/bigeimports-OG-2x.png' alt='Big E Imports' border='0' width='150'></br></br>" +
+          "<h1>New Quote Accepted</h1><hr></br>" + "<p>Hello Big E Imports, A new quotation has been accepted in your system! Please check details below.</p><br><br>" +
           "<table><tr><th><b>Customer Name: </b></th>" + "<td>" +req.body.name + "</td></tr>" +
           "<tr><th><b>Pickup Country: </b></th>" + "<td>"  + req.body.pickupcountry + "</td></tr>" +
           "<tr><th><b>Loading Port: </b></th>" + "<td>"  + req.body.loadingPort + "</td></tr>" +
@@ -544,41 +580,70 @@ router.post('/save-quote', function(req, res, next) {
 
 router.post('/update-status', function(req, res, next) {
     
-  
-  var quoteDetails = new quoteModel({
-    name:req.body.name,
-    pickupcountry:req.body.pickupcountry,
-    loadingPort: req.body.loadingPort,
-    incoterms: req.body.incoterms,
-    pickupAddress: req.body.pickupAddress,
-    deliveryAddress: req.body.deliveryAddress,
-    shippingSpeed: req.body.shippingSpeed,
-    shippingMethod: req.body.shippingMethod,
-    withPallet: req.body.withPallet,
-    containerSize: req.body.containerSize,
-    length: req.body.length,
-    width: req.body.width,
-    height: req.body.height,
-    weight: req.body.weight,
-    noOfBoxes: req.body.noOfBoxes,
-    chargeableWeight: req.body.chargeableWeight,
-    totalOriginCharges: req.body.totalOriginCharges,
-    localPortCharges: req.body.localPortCharges,
-    localTransportCharges: req.body.localTransportCharges,
-    quoteprice: req.body.quoteprice,
-    tag:'Accepted',
-    status: req.body.status
-  });
-   
-  quoteDetails .save((err, doc) => {
-    if (!err){
-      req.flash('success', 'Quote successfully updated!');
-      console.log('Quote successfully updated!');
-      res.redirect('/accepted-quotes-admin');}
-    else{
-      console.log('Error during record insertion : ' + err);}
-  });
-
+  const id = req.body.id;
+    quoteModel.findByIdAndUpdate(id, {$set:{tag:'Accepted'}}, { useFindAndModify: false})
+        .then(data => {
+            if(!data){
+                res.status(404).send({ message : `Cannot Update quote with ${id}. Maybe quote not found!`})
+            }else{
+              quoteModel.find((err, docs) => {
+                if (!err) {
+                    req.flash('success', 'Quote updated successfully!');
+                    res.redirect('/drafted-quotes');  
+                } else {
+                    console.log('Failed to retrieve freight charges list: ' + err);
+                }
+              });
+            }
+        })
+        .catch(err =>{
+            res.status(500).send({ message : "Error Updating quote information"})
+        })
+     
+        var mail = nodemailer.createTransport({
+          service: 'gmail',
+          auth: {
+            user: 'divinegraceguballa@gmail.com',
+        pass: 'itkantjlwvivbotg'
+          }
+        });
+      
+        var recipients = [req.session.user[0].email, 'adrianodivine@gmail.com','divine.adriano@knobin.com'];
+        var mailOptions = {
+          from: 'bigeimports@gmail.com',
+          to: recipients,
+          subject: 'New Shipping Quote Accepted!',
+          html: "<style>table{text-align:left;border-collapse: collapse;}th{border: 1px solid #2e3690;background:#2e3690;color:white;padding:10px;}td{padding:10px;border: 1px solid #2e3690;}</style>" +
+                "<img src='https://i.ibb.co/X3C8c83/bigeimports-OG-2x.png' alt='Big E Imports' border='0' width='150'></br></br>" +
+                "<h1>New Quote Accepted</h1><hr></br>" + 
+                "<table><tr><th><b>Customer Name: </b></th>" + "<td>" +req.body.name + "</td></tr>" +
+                "<tr><th><b>Pickup Country: </b></th>" + "<td>"  + req.body.pickupcountry + "</td></tr>" +
+                "<tr><th><b>Loading Port: </b></th>" + "<td>"  + req.body.loadingPort + "</td></tr>" +
+                "<tr><th><b>Pickup Address: </b></th>" + "<td>"  + req.body.pickupAddress + "</td></tr>" +
+                "<tr><th><b>Delivery Address: </b></th>" + "<td>"  + req.body.deliveryAddress + "</td></tr>" +
+                "<tr><th><b>Incoterms: </b></th>" + "<td>"  + req.body.incoterms + "</td></tr>" +
+                "<tr><th><b>Shipping Method: </b></th>" + "<td>"  + req.body.shippingMethod + "</td></tr>" +
+                "<tr><th><b>Shipping Speed: </b></th>" + "<td>"  + req.body.shippingSpeed + "</td></tr>" +
+                "<tr><th><b>No. Of Boxes: </b></th>" + "<td>"  + req.body.noOfBoxes + "</td></tr>" +
+                "<tr><th><b>Should we put your boxes in a pallet? </b></th>" + "<td>"  + req.body.withPallet + "</td></tr>" +
+                "<tr><th><b>Length: </b></th>" + "<td>"  + req.body.length + "</td></tr>" +
+                "<tr><th><b>Width: </b></th>" + "<td>"  + req.body.width + "</td></tr>" +
+                "<tr><th><b>Height: </b></th>" + "<td>"  + req.body.height + "</td></tr>" +
+                "<tr><th><b>Weight: </b></th>" + "<td>"  + req.body.weight + "</td></tr>" +
+                "<tr><th><b>Origin Charges: </b></th>" + "<td>"  + req.body.totalOriginCharges + "</td></tr>" +
+                "<tr><th><b>Local Port Charges: </b></th>" + "<td>"  + req.body.localPortCharges + "</td></tr>" +
+                "<tr><th><b>Local Transport / Delivery Charges: </b></th>" + "<td>"  + req.body.localTransportCharges + "</td></tr>" +
+                "<tr><th><b>Quotation Price </b></th>" + "<td>"  + req.body.quoteprice + "</td></tr></table>"
+         
+        };
+          
+        mail.sendMail(mailOptions, function(error, info){
+          if (error) {
+            console.log(error);
+          } else {
+            console.log('Email sent: ' + info.response);
+          }
+        });
   
 });
 
@@ -725,13 +790,46 @@ router.post('/update-charge', function(req, res, next) {
             if(!data){
                 res.status(404).send({ message : `Cannot Update quote with ${id}. Maybe quote not found!`})
             }else{
-              res.redirect('/freight-charges');
+              freightChargeModel.find((err, docs) => {
+                if (!err) {
+                    req.flash('success', 'Freight charge updated successfully!');
+                    res.render('freight-charges', {data: docs});     
+                } else {
+                    console.log('Failed to retrieve freight charges list: ' + err);
+                }
+              });
             }
         })
         .catch(err =>{
             res.status(500).send({ message : "Error Updating quote information"})
         })
-
-        
+     
 });
+
+router.post('/delete-charge', function(req, res, next) {
+
+  const id = req.body.id;
+  freightChargeModel.findByIdAndDelete(id)
+  .then(data => {
+      if(!data){
+          res.status(404).send({ message : `Cannot Delete with id ${id}. Maybe id is wrong`})
+      }else{
+        freightChargeModel.find((err, docs) => {
+          if (!err) {
+              req.flash('success', 'Freight charge updated successfully!');
+              res.render('freight-charges', {data: docs});     
+          } else {
+              console.log('Failed to retrieve freight charges list: ' + err);
+          }
+        });
+      }
+  })
+  .catch(err =>{
+      res.status(500).send({
+          message: "Could not delete User with id=" + id
+      });
+  });
+     
+});
+
 module.exports = router;

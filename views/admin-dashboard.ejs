@@ -74,8 +74,8 @@
                   <div class="form-cell ">
                     <label for="containerSize" >Container Size:</label>
                       <select   class="form-control seaFreight" name="containerSize" id="containerSize">
-                          <option value="40' FCL GP">20' FCL GP</option>
-                          <option value="20' FCL GP">40' FCL GP</option>
+                          <option value="40' FCL GP" class="seaFreight">20' FCL GP</option>
+                          <option value="20' FCL GP" class="seaFreight">40' FCL GP</option>
                       </select>
                   </div>
                 </div>
@@ -293,14 +293,17 @@
              
               for (var i = 0; i < airFreight.length; i ++) {
                   airFreight[i].readOnly = true;
+                 
               }
               for (var i = 0; i < seaFreight.length; i ++) {
                   seaFreight[i].readOnly = false;
+                  document.querySelector('select[name="containerSize"] option[class="seaFreight"]').disabled = false;
               }
             }
             else{
               for (var i = 0; i < seaFreight.length; i ++) {
                 seaFreight[i].readOnly = true;
+                document.querySelector('select[name="containerSize"] option[class="seaFreight"]').disabled = true;
               }
               for (var i = 0; i < airFreight.length; i ++) {
                 airFreight[i].readOnly = false;

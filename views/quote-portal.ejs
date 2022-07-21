@@ -8,7 +8,7 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
   </head>
-  <body>
+  <body onload="disableFields()">
     <!-- include header -->
     <%- include('include/header') %>
     <!-- /include header -->
@@ -54,6 +54,23 @@
                   <div class="form-group2">
                     
                     <div class="form-cell">
+                      <label for="shippingMethod">Shipping Method:</label>
+                      <select required class="form-control" name="shippingMethod" id="shippingMethod" onchange="disableFields()" onfocus="this.selectedIndex = -1;">
+                          <option value="Air Freight">Air Freight</option>
+                          <option value="Sea Freight">Sea Freight</option>
+                      </select>
+                    </div>
+
+                    <div class="form-cell">
+                      <label for="shippingSpeed">Shipping Speed:</label>
+                      <select required class="form-control" name="shippingSpeed" id="shippingSpeed" >
+                          <option value="Express">Express</option>
+                          <option value="Transhipment">Transhipment</option>
+                          <option value="Direct">Direct</option>
+                      </select>
+                    </div>
+
+                    <div class="form-cell">
                       <label for="pickupcountry" >Origin Country:</label>
                         <select required  class="form-control" name="pickupcountry" id="pickupcountry">
                             <option value="China">China</option>
@@ -64,15 +81,21 @@
                     <div class="form-cell">
                       <label for="loadingPort" >Port / Airport of Loading:</label>
                         <select required  class="form-control" name="loadingPort" id="loadingPort">
-                            <option value="CN PVG - Shanghai Pudong International Airport">AIR - CN PVG - Shanghai Pudong International Airport</option>
-                            <option value="CNPEK, Beijing">AIR - CNPEK, Beijing</option>
-                            <option value="CNCAN -  GUANGZHOU">AIR - CNCAN -  GUANGZHOU</option>
-                            <option value="O'hare Airport Chicago">AIR - O'hare Airport Chicago</option>
-                            <option value="Garden City Regional Airport">AIR - Garden City Regional Airport</option>
-                            <option value="Shanghai Pudong International Airport">SEA - Shekou Port</option>
-                            <option value="CNSHG - Shanghai Port">SEA - CNSHG - Shanghai Port</option>
+                            <option class="airFreight" value="CN PVG - Shanghai Pudong International Airport">AIR - CN PVG - Shanghai Pudong International Airport</option>
+                            <option class="airFreight" value="CNPEK, Beijing">AIR - CNPEK, Beijing</option>
+                            <option class="airFreight" value="CNCAN -  GUANGZHOU">AIR - CNCAN -  GUANGZHOU</option>
+                            <option class="airFreight" value="O'hare Airport Chicago">AIR - O'hare Airport Chicago</option>
+                            <option class="airFreight" value="Garden City Regional Airport">AIR - Garden City Regional Airport</option>
+                            <option class="seaFreight" value="Shanghai Pudong International Airport">SEA - Shekou Port</option>
+                            <option class="seaFreight" value="CNSHG - Shanghai Port">SEA - CNSHG - Shanghai Port</option>
                         </select>
                     </div>
+                    
+                  </div>
+
+                  <div class="form-group2 ">
+
+                    
 
                     <div class="form-cell">
                       <label for="incoterms">Incoterms:</label>
@@ -81,15 +104,14 @@
                           <option value="FOB">Free On-Board</option>
                       </select>
                     </div>
-                    
-                  </div>
 
-                  <div class="form-group2 ">
                     <div class="form-cell EXW">
                       <label for="pickupAddress">Origin Address:</label>
-                      <input type="String" class="form-control"  id="pickupAddress" name="pickupAddress" >
+                      <input type="String" class="form-control" required id="pickupAddress" name="pickupAddress" >
                     </div>
                   </div>
+
+
                   
                   <hr>
                   <h4>Destination</h4>
@@ -101,47 +123,33 @@
                     
                     </div>
                     
-                    <div class="form-cell">
-                      <label for="shippingMethod">Shipping Method:</label>
-                      <select required class="form-control" name="shippingMethod" id="shippingMethod" >
-                          <option value="Air Freight">Air Freight</option>
-                          <option value="Sea Freight">Sea Freight</option>
-                      </select>
-                    </div>
-                    
-                    
-                    <div class="form-cell">
-                      <label for="shippingSpeed">Shipping Speed:</label>
-                      <select required class="form-control" name="shippingSpeed" id="shippingSpeed" >
-                          <option value="Express">Express</option>
-                          <option value="Transhipment">Transhipment</option>
-                          <option value="Direct">Direct</option>
-                      </select>
-                    </div>
                     
                   </div>
 
                   <div class="form-group2">
-                    <div class="form-cell airFreight">
-                      <label for="noOfBoxes">No. of  Boxes:</label>
-                      <input type="number" class="form-control" required id="noOfBoxes" name="noOfBoxes" >
+
+                    <div class="form-cell ">
+                      <label for="containerSize">Container Type:</label>
+                      <select  class="form-control seaFreight" name="containerSize" id="containerSize">
+                        <option value="20' FCL GP">20' FCL GP</option>
+                        <option value="40' FCL GP">40' FCL GP</option>
+                    </select>
                     </div>
 
-                    <div class="form-cell airFreight">
+                    <div class="form-cell ">
+                      <label for="noOfBoxes">No. of  Boxes:</label>
+                      <input type="number" class="form-control LCL" required id="noOfBoxes" name="noOfBoxes" onkeyup="computeWeight()">
+                    </div>
+
+                    <div class="form-cell ">
                       <label for="withPallet">Should we put your boxes in a pallet? Additional 20kg</label>
-                      <select required class="form-control " name="withPallet" id="withPallet">
+                      <select required class="form-control LCL" name="withPallet" id="withPallet" onchange="computeWeight()" onfocus="this.selectedIndex = -1;">
                         <option value="Yes">Yes</option>
                         <option value="No">No</option>
                     </select>
                     </div>
 
-                    <div class="form-cell seaFreight">
-                      <label for="containerSize">Container Type:</label>
-                      <select  class="form-control " name="containerSize" id="containerSize">
-                        <option value="20' FCL GP">20' FCL GP</option>
-                        <option value="40' FCL GP">40' FCL GP</option>
-                    </select>
-                    </div>
+                    
 
                     <script>
 
@@ -206,7 +214,7 @@
                         if(shippingMethod === "Air Freight"){
                           if(withPallet === "Yes"){
                             cbm = ((l*w*h)/4500) * noOfBoxes;
-                            chargeableWeight.value=cbm + (20*noOfBoxes);
+                            chargeableWeight.value=cbm + 20;
                           }
                           else{
                             cbm = ((l*w*h)/4500) * noOfBoxes;
@@ -217,7 +225,7 @@
                         else{
                           if(withPallet === "Yes"){
                             cbm = ((l*w*h)/3500) * noOfBoxes;
-                            chargeableWeight.value=cbm + (20*noOfBoxes);
+                            chargeableWeight.value=cbm + 20;
                           }
                           else{
                             cbm = ((l*w*h)/4500) * noOfBoxes;
@@ -231,8 +239,48 @@
                       
                     }
                     
-                   
+                    function disableFields(){
+                      var shippingMethod = document.getElementById("shippingMethod").value;
+                      var airFreight = document.getElementsByClassName('airFreight');
+                      var seaFreight = document.getElementsByClassName('seaFreight');
+                      if(shippingMethod === "Sea Freight"){
+                      
+                        for (var i = 0; i < airFreight.length; i ++) {
+                            airFreight[i].readOnly = true;
+                            airFreight[i].disabled = true;
+                            document.querySelector('select[name="loadingPort"] option[class="airFreight"]').disabled = true;
+                        }
+                        for (var i = 0; i < seaFreight.length; i ++) {
+                            seaFreight[i].readOnly = false;
+                            seaFreight[i].disabled = false;
+                            document.querySelector('select[name="loadingPort"] option[class="seaFreight"]').disabled = false;
+                        }
+                      }
+                      else{
+                        for (var i = 0; i < seaFreight.length; i ++) {
+                          seaFreight[i].readOnly = true;
+                          seaFreight[i].disabled = true;
+                          document.querySelector('select[name="loadingPort"] option[class="seaFreight"]').disabled = true;
+                        }
+                        for (var i = 0; i < airFreight.length; i ++) {
+                          airFreight[i].readOnly = false;
+                          airFreight[i].disabled = false;
+                          document.querySelector('select[name="loadingPort"] option[class="airFreight"]').disabled = false;
+                        }
+                      }
+                    }
                     
+
+                    function hideAddress(){
+                      var incoterms = document.getElementById("incoterms").value;
+
+                      if(incoterms === "EXW"){
+                        document.getElementById('pickupAddress').disabled = false;
+                      }
+                      else{
+                        document.getElementById('pickupAddress').disabled = true;
+                      }
+                    }
   
                   </script>
                   

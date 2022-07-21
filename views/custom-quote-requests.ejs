@@ -24,7 +24,7 @@
           </div>
         </div>
         <div class="column-2" >
-          <h2>My Quote Requests</h2>
+          <h2>Custom Quote Requests</h2>
             <% if (messages.success) { %>
                 <p class="alert alert-success mt-4"><%- messages.success %></p>
             <% } %>  
@@ -50,7 +50,7 @@
                 <td><%= data[i].createdAt%></td>
                 <td><%= data[i].name%></td>
                 <td><%= data[i].incoterms%></td>
-                <td><%= data[i].shippingspeed%></td>
+                <td><%= data[i].shippingSpeed%></td>
                 <td><%= data[i].quoteprice%></td>
                 <td>
                   <a href="/update-quote?id=<%= data[i]._id%>" class="btn border-shadow update">

@@ -31,10 +31,10 @@ const quoteSchema = new Schema({
     deliveryAddress:{
         type:String
     },
-    shippingspeed:{
+    shippingSpeed:{
         type:String
     },
-    shippingmethod:{
+    shippingMethod:{
         type:String
     },
     withPallet:{

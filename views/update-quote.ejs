@@ -33,7 +33,7 @@
                     <hr>
                     <h4>Customer Information</h4>
                     <div class="form-group2">
-                      
+                      <input  type="text" hidden readonly class="form-control"  id="id" name="id" value="<%= quote._id%>">
                       <div class="form-cell">
                         <label for="name">Name</label>
                         <input  type="text" class="form-control" readonly id="name" aria-describedby="emailHelp" placeholder="Enter Name:" name="name" value="<%= quote.name%>">
@@ -185,7 +185,7 @@
                       
                     </div>
                     <button type="submit" class="btn btn-save" formaction="/drafted-quotes">Back</button>
-                    <button type="submit" class="btn btn-primary"  formaction="/accept-quote" >Accept Quote</button>
+                    <button type="submit" class="btn btn-primary"  formaction="/update-status" >Accept Quote</button>
                     
                     
                   </form>
