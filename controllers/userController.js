@@ -1,8 +1,8 @@
-const Customer = require('../models/Customer')
+const userModel = require('../models/UserMod')
 
 //Show the list of Employees
 const index = (req, res, next) => {
-    Customer.find()
+    userModel.find()
     .then(response => {
         res.json({
             response
@@ -34,7 +34,7 @@ const show = (req, res, next) => {
 //save a customer
 
 const store = (req, res, next) => {
-    let customer = new Customer({
+    let customer = new userModel({
         name: req.body.name,
         email: req.body.email,
         phone: req.body.phone,

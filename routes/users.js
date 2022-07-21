@@ -24,7 +24,11 @@ router.use(
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('register', { title: 'ERA Imports Quote Portal Sign Up' });
+  res.render('home', { title: 'Big E Imports' });
+});
+
+router.get('/register', function(req, res, next) {
+  res.render('register', { title: 'Big E Imports Quote Portal Sign Up' });
 });
 
 
