@@ -415,14 +415,23 @@ router.post('/generate-quote', function(req, res, next) {
           res.render('generated-quote', {data:result});
         }
         else if(docs[0].shippingMethod === "Sea Freight" ){
+          var localTransportCharges = parseFloat(docs[0].localTransportCharges);
+        var localPortCharges = parseFloat(docs[0].localPortCharges);
+        var totalOriginCharges = parseFloat(docs[0].totalOriginCharges);
           var localCharges = localPortCharges + localTransportCharges;
           if(req.body.incoterms === "EXW"){
+            console.log(localCharges);
+            console.log(localTransportCharges);
+            console.log(localPortCharges);
             quoteprice = totalOriginCharges + localPortCharges + localTransportCharges;
             
             console.log(quoteprice);
           }
           else{
-            quoteprice = totalOriginCharges + localPortCharges + localTransportCharges - (2000*exchangeRate);
+            console.log(localCharges);
+            console.log(localTransportCharges);
+            console.log(localPortCharges);
+            quoteprice = totalOriginCharges + localCharges - (2000*exchangeRate);
             console.log(quoteprice);
           }
           result.push({
