@@ -183,27 +183,23 @@
                     
   
                     <div class="form-cell">
-                      <label for="totalOriginCharges">Origin Charges $ (AU)</label>
+                      <label for="totalOriginCharges">Origin Charges AU$</label>
                       <input type="number" class="form-control" readonly id="totalOriginCharges" name="totalOriginCharges" value="<%= data[0].totalOriginCharges%>">
                     </div>
   
                     <div class="form-cell">
-                      <label for="localPortCharges">Local Port Charges $ (AU)</label>
-                      <input type="number" class="form-control" readonly id="localPortCharges" name="localPortCharges" value="<%= data[0].localPortCharges%>" >
+                      <label for="localCharges%">Local Charges AU$</label>
+                      <input type="number" class="form-control" readonly id="localCharges" name="localCharges" value="<%= data[0].localCharges%>" >
                     </div>
-  
-                    <div class="form-cell">
-                      <label for="localTransportCharges">localTransportCharges $ (AU)</label>
-                      <input type="number" class="form-control" readonly id="localTransportCharges" name="localTransportCharges" value="<%= data[0].localTransportCharges%>" >
-                    </div>
-  
+                    <input type="number" class="form-control" hidden  id="localPortCharges" name="localPortCharges" value="<%= data[0].localPortCharges%>" >
+                    <input type="number" class="form-control" hidden  id="localPortCharges" name="localPortCharges" value="<%= data[0].localTransportCharges%>" >
                   </div>
 
                   <hr>
                   <h4>Estimated Quote Price</h4>
                   <div class="form-group2">
                     <div class="form-cell">
-                      <br><span><b> $ (US) <input type="text" style="display: inline;border:none;" id="quoteprice" name="quoteprice" value="<%= data[0].quoteprice%>"></b></span>
+                      <br><span><b>AU$ <input type="text" style="display: inline;border:none;" id="quoteprice" name="quoteprice" value="<%= data[0].quoteprice%>"></b></span>
                     </div>
                     
                   </div>

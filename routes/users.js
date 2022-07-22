@@ -352,7 +352,7 @@ router.delete('/api/quote/:id', controller.delete);
 router.post('/generate-quote', function(req, res, next) {
   
   var result = [];
-  const query = { "loadingPort": req.body.loadingPort };
+  const query = { "loadingPort": req.body.loadingPort, "containerSize" : req.body.containerSize };
   var quoteprice;
   freightChargeModel.find( query, (err, docs) => {
       if (!err) {
@@ -382,9 +382,9 @@ router.post('/generate-quote', function(req, res, next) {
           }
 
           totalOriginCharges = totalOriginCharges + ((airFreightRate*chargeableWeight) + (cartageFromOrigin*chargeableWeight))*exchangeRate;
-          
+         
           quoteprice = totalOriginCharges + localTransportCharges;
-
+          
           
           quoteprice = Math.round((quoteprice + Number.EPSILON) * 100) / 100;
 
@@ -407,19 +407,22 @@ router.post('/generate-quote', function(req, res, next) {
             noOfBoxes: req.body.noOfBoxes,
             chargeableWeight: req.body.chargeableWeight,
             totalOriginCharges: totalOriginCharges,
+            localCharges: localTransportCharges,
             localPortCharges: '0',
             localTransportCharges: localTransportCharges,
             quoteprice: quoteprice
           });
           res.render('generated-quote', {data:result});
         }
-        else if(docs[0].shippingMethod === "Sea Freight" && docs[0].containerSize === "40' FCL GP"){
+        else if(docs[0].shippingMethod === "Sea Freight" ){
+          var localCharges = localPortCharges + localTransportCharges;
           if(req.body.incoterms === "EXW"){
-            quoteprice = totalOriginCharges + localPortCharges + 2000;
+            quoteprice = totalOriginCharges + localPortCharges + localTransportCharges;
+            
             console.log(quoteprice);
           }
           else{
-            quoteprice = totalOriginCharges + localPortCharges;
+            quoteprice = totalOriginCharges + localPortCharges + localTransportCharges - (2000*exchangeRate);
             console.log(quoteprice);
           }
           result.push({
@@ -440,12 +443,15 @@ router.post('/generate-quote', function(req, res, next) {
             noOfBoxes: req.body.noOfBoxes,
             chargeableWeight: req.body.chargeableWeight,
             totalOriginCharges: totalOriginCharges,
+            localCharges: localCharges,
             localPortCharges: localPortCharges,
             localTransportCharges: localTransportCharges,
             quoteprice: quoteprice
           });
           res.render('generated-quote', {data:result});
         }
+
+        
         else{
           console.log(err);
         }

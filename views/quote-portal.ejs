@@ -64,9 +64,9 @@
                     <div class="form-cell">
                       <label for="shippingSpeed">Shipping Speed:</label>
                       <select required class="form-control" name="shippingSpeed" id="shippingSpeed" >
-                          <option value="Express">Express</option>
-                          <option value="Transhipment">Transhipment</option>
-                          <option value="Direct">Direct</option>
+                          <option class="airFreight" value="Express">Express</option>
+                          <option class="seaFreight"value="Transhipment">Transhipment</option>
+                          <option class="seaFreight" value="Direct">Direct</option>
                       </select>
                     </div>
 
@@ -80,7 +80,7 @@
                     
                     <div class="form-cell">
                       <label for="loadingPort" >Port / Airport of Loading:</label>
-                        <select required  class="form-control" name="loadingPort" id="loadingPort">
+                        <select required  class="form-control" name="loadingPort" id="loadingPort" onchange="displayAddress()" onfocus="this.selectedIndex = -1;">
                             <option class="airFreight" value="CN PVG - Shanghai Pudong International Airport">AIR - CN PVG - Shanghai Pudong International Airport</option>
                             <option class="airFreight" value="CNPEK, Beijing">AIR - CNPEK, Beijing</option>
                             <option class="airFreight" value="CNCAN -  GUANGZHOU">AIR - CNCAN -  GUANGZHOU</option>
@@ -100,8 +100,8 @@
                     <div class="form-cell">
                       <label for="incoterms">Incoterms:</label>
                       <select required class="form-control" name="incoterms" id="incoterms" onchange="hideAddress()" onfocus="this.selectedIndex = -1;">
-                          <option value="EXW">Ex-Works</option>
-                          <option value="FOB">Free On-Board</option>
+                          <option value="EXW">Ex-Works (EXW)</option>
+                          <option value="FOB">Free On-Board (FOB)</option>
                       </select>
                     </div>
 
@@ -137,13 +137,13 @@
                     </div>
 
                     <div class="form-cell ">
-                      <label for="noOfBoxes">No. of  Boxes:</label>
+                      <label for="noOfBoxes">No. of  Pallet/Boxes:</label>
                       <input type="number" class="form-control LCL" required id="noOfBoxes" name="noOfBoxes" onkeyup="computeWeight()">
                     </div>
 
                     <div class="form-cell ">
-                      <label for="withPallet">Should we put your boxes in a pallet? Additional 20kg</label>
-                      <select required class="form-control LCL" name="withPallet" id="withPallet" onchange="computeWeight()" onfocus="this.selectedIndex = -1;">
+                      <label for="withPallet">Would you like us to put this in a pallet?</label>
+                      <select required class="form-control" name="withPallet" id="withPallet" onchange="computeWeight()" onfocus="this.selectedIndex = -1;">
                         <option value="Yes">Yes</option>
                         <option value="No">No</option>
                     </select>
@@ -159,38 +159,43 @@
 
                   
                   <hr>
-                  <h4>Dimensions / Box</h4>
+                  <h4>Dimensions</h4>
                   <div class="form-group2">
                     
   
                     <div class="form-cell">
                       <label for="length">Length (cm):</label>
-                      <input type="number" class="form-control" required id="length" name="length" onkeyup="computeWeight()">
+                      <input type="number" class="form-control airFreight" required id="length" name="length" onkeyup="computeWeight()">
                     </div>
   
                     <div class="form-cell">
                       <label for="width">Width  (cm):</label>
-                      <input type="number" class="form-control" required id="width" name="width"  onkeyup="computeWeight()">
+                      <input type="number" class="form-control airFreight" required id="width" name="width"  onkeyup="computeWeight()">
                     </div>
   
                     <div class="form-cell">
                       <label for="height">Height  (cm):</label>
-                      <input type="number" class="form-control" required id="height" name="height"  onkeyup="computeWeight()">
+                      <input type="number" class="form-control airFreight" required id="height" name="height"  onkeyup="computeWeight()">
+                    </div>
+
+                    <div class="form-cell">
+                      <label for="cbm">CBM</label>
+                      <input type="number" class="form-control airFreight" readonly id="cbm" name="cbm" >
                     </div>
   
                     <div class="form-cell">
                       <label for="weight">Weight (kg):</label>
-                      <input type="number" class="form-control" required id="weight" name="weight" onkeyup="computeWeight()">
+                      <input type="number" class="form-control airFreight" required id="weight" name="weight" onkeyup="computeWeight()">
                     </div>
   
                   </div>
                   
                   
                   <hr>
-                  <h4>Chargeable Weight</h4>
-                  <div class="form-group2">
-                    <div class="form-cell">
-                      <br><span><b> <input type="text" style="display: inline;border:none;" id="chargeableWeight" name="chargeableWeight" ></b> kg</span>
+                  <h4 class="cw">Chargeable Weight</h4>
+                  <div class="form-group2 cw">
+                    <div class="form-cell cw">
+                      <br><span class="cw" ><b> <input type="text" class="cw" style="display: inline;border:none;" id="chargeableWeight" name="chargeableWeight" ></b> kg</span>
                     </div>
                     
                   </div>
@@ -209,28 +214,24 @@
                       var shippingMethod = document.getElementById("shippingMethod").value;
                       var withPallet = document.getElementById("withPallet").value;
 
+
+
                       if(l!="" && w!="" && h!="" && noOfBoxes!=""){
                         
                         if(shippingMethod === "Air Freight"){
                           if(withPallet === "Yes"){
-                            cbm = ((l*w*h)/4500) * noOfBoxes;
-                            chargeableWeight.value=cbm + 20;
+                            cbm = ((l*w*h)/4500);
+                            document.getElementById('cbm').value = cbm;
+                            chargeableWeight.value=(cbm*noOfBoxes) + 20;
+                            chargeableWeight.value = chargeableWeight.value.toFixed(2);
                           }
                           else{
-                            cbm = ((l*w*h)/4500) * noOfBoxes;
-                            chargeableWeight.value=cbm;
+                            cbm = ((l*w*h)/4500);
+                            document.getElementById('cbm').value = cbm;
+                            chargeableWeight.value=cbm*noOfBoxes;
+                            chargeableWeight.value = chargeableWeight.value.toFixed(2);
                           }
                           
-                        }
-                        else{
-                          if(withPallet === "Yes"){
-                            cbm = ((l*w*h)/3500) * noOfBoxes;
-                            chargeableWeight.value=cbm + 20;
-                          }
-                          else{
-                            cbm = ((l*w*h)/4500) * noOfBoxes;
-                            chargeableWeight.value=cbm;
-                          }
                         }
                       }
                       else{
@@ -240,32 +241,67 @@
                     }
                     
                     function disableFields(){
+                      
+                      displayAddress();
                       var shippingMethod = document.getElementById("shippingMethod").value;
                       var airFreight = document.getElementsByClassName('airFreight');
                       var seaFreight = document.getElementsByClassName('seaFreight');
                       if(shippingMethod === "Sea Freight"){
+                        
+                        document.querySelector('select[name="loadingPort"] option[class="airFreight"]').disabled = true;
+                        document.querySelector('select[name="loadingPort"] option[class="airFreight"]').style.background = "E9ECEF !important";
+                        document.querySelector('select[name="shippingSpeed"] option[class="airFreight"]').disabled = true;
+                        document.querySelector('select[name="shippingSpeed"] option[class="airFreight"]').style.background = "E9ECEF !important";
+
+                        document.querySelector('select[name="loadingPort"] option[class="seaFreight"]').disabled = false;
+                        document.querySelector('select[name="loadingPort"] option[class="seaFreight"]').style.background = "ffffff !important";
+                        document.querySelector('select[name="shippingSpeed"] option[class="seaFreight"]').disabled = false;
+                        document.querySelector('select[name="shippingSpeed"] option[class="seaFreight"]').style.background = "ffffff !important";
+                        document.getElementById('withPallet').value = "";
+                        document.getElementById('withPallet').disabled = true;
+                        document.getElementById('loadingPort').value = "";
+                        document.getElementById('shippingSpeed').value = "";
+                        document.getElementById('pickupAddress').value = "";
+
                       
                         for (var i = 0; i < airFreight.length; i ++) {
                             airFreight[i].readOnly = true;
                             airFreight[i].disabled = true;
-                            document.querySelector('select[name="loadingPort"] option[class="airFreight"]').disabled = true;
+                            
                         }
                         for (var i = 0; i < seaFreight.length; i ++) {
                             seaFreight[i].readOnly = false;
                             seaFreight[i].disabled = false;
-                            document.querySelector('select[name="loadingPort"] option[class="seaFreight"]').disabled = false;
+                            
                         }
                       }
                       else{
+                        document.getElementById('withPallet').disabled = false;
+                        document.getElementById('containerSize').value="not applicable"
+                        
+                        document.querySelector('select[name="loadingPort"] option[class="seaFreight"]').disabled = true;
+                        document.querySelector('select[name="loadingPort"] option[class="seaFreight"]').style.background = "E9ECEF !important";
+                        document.querySelector('select[name="shippingSpeed"] option[class="seaFreight"]').disabled = true;
+                        document.querySelector('select[name="shippingSpeed"] option[class="seaFreight"]').style.background = "E9ECEF !important";
+                       
+
+                        document.querySelector('select[name="loadingPort"] option[class="airFreight"]').disabled = false;
+                        document.querySelector('select[name="loadingPort"] option[class="airFreight"]').style.background = "ffffff !important";
+                        document.querySelector('select[name="shippingSpeed"] option[class="airFreight"]').disabled = false;
+                        document.querySelector('select[name="shippingSpeed"] option[class="airFreight"]').style.background = "ffffff !important";
+                        document.getElementById('loadingPort').value = "";
+                        document.getElementById('shippingSpeed').value = "";
+                        document.getElementById('pickupAddress').value = "";
+
                         for (var i = 0; i < seaFreight.length; i ++) {
                           seaFreight[i].readOnly = true;
                           seaFreight[i].disabled = true;
-                          document.querySelector('select[name="loadingPort"] option[class="seaFreight"]').disabled = true;
+                          
                         }
                         for (var i = 0; i < airFreight.length; i ++) {
                           airFreight[i].readOnly = false;
                           airFreight[i].disabled = false;
-                          document.querySelector('select[name="loadingPort"] option[class="airFreight"]').disabled = false;
+                          
                         }
                       }
                     }
@@ -279,6 +315,36 @@
                       }
                       else{
                         document.getElementById('pickupAddress').disabled = true;
+                      }
+                    }
+
+                    function displayAddress(){
+                      var incoterms = document.getElementById("incoterms").value;
+                      var loadingPort = document.getElementById('loadingPort').value;
+
+                      if(incoterms === "EXW" && loadingPort==="CN PVG - Shanghai Pudong International Airport"){
+                        document.getElementById('pickupAddress').value = 'ROOM 20A,KIU FU COMMERCIAL BUILDING 300 LOCKHART ROAD, Wan Chai, Hong Kong';
+                      }
+                      else if (incoterms === "EXW" && loadingPort==="CNPEK, Beijing") {
+                        document.getElementById('pickupAddress').value = 'South of S333 Highway, Wulie Town, Jinyang Community  616200,  CN';
+                      }
+                      else if (incoterms === "EXW" && loadingPort==="CNCAN -  GUANGZHOU") {
+                        document.getElementById('pickupAddress').value = '3th Floor,8th Building,No 177,Furong Rd, Xinqiao Street,Baoan Dist,Shenzhen ';
+                      }
+                      else if (incoterms === "EXW" && loadingPort==="O'hare Airport Chicago") {
+                        document.getElementById('pickupAddress').value = '11/F, HUAYI TECHNOLOGY BUILDING, YONGXIANG RD, WUHE COMMUNITY, BANTIAN TOWN, LONGGANG DISTRICT, SHENZHEN, CHINA';
+                      }
+                      else if (incoterms === "EXW" && loadingPort==="O'hare Airport Chicago") {
+                        document.getElementById('pickupAddress').value = '11/F, HUAYI TECHNOLOGY BUILDING, YONGXIANG RD, WUHE COMMUNITY, BANTIAN TOWN, LONGGANG DISTRICT, SHENZHEN, CHINA';
+                      }
+                      else if (incoterms === "EXW" && loadingPort==="Garden City Regional Airport") {
+                        document.getElementById('pickupAddress').value = '4711 NASH ROAD, SCOTT CITY,  MO,  63780,  US';
+                      }
+                      else if (incoterms === "EXW" && loadingPort==="CNSHK - Shekou Port") {
+                        document.getElementById('pickupAddress').value = '11/F, HUAYI TECHNOLOGY BUILDING, YONGXIANG RD, WUHE COMMUNITY, BANTIAN TOWN, LONGGANG DISTRICT, SHENZHEN, CHINA';
+                      }
+                      else if (incoterms === "EXW" && loadingPort==="CNSHG - Shanghai Port") {
+                        document.getElementById('pickupAddress').value = '2 HONGYANG STREET TIANNING DISTRICT, CHANGZHOU,  JIANGSU,  213000,  CN';
                       }
                     }
   
