@@ -352,7 +352,7 @@ router.delete('/api/quote/:id', controller.delete);
 router.post('/generate-quote', function(req, res, next) {
   
   var result = [];
-  const query = { "loadingPort": req.body.loadingPort, "containerSize" : req.body.containerSize };
+  const query = { "loadingPort": req.body.loadingPort};
   var quoteprice;
   freightChargeModel.find( query, (err, docs) => {
       if (!err) {
